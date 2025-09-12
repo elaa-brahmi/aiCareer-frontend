@@ -1,0 +1,30 @@
+import { NextApiRequest } from 'next'
+
+import { getAxiosInstance } from '@/lib/api/axiosConfig.ts'
+import { ApiErrorType } from '@/lib/api/constants'
+import { ApiError } from '@/lib/api/errors'
+
+export const signUpUser = async (data: any, serverRequest?: NextApiRequest) => {
+  try {
+    const axios = await getAxiosInstance(serverRequest)
+    const response = await axios.post('/api/user/signup', data)
+    return response.data
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error
+    }
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to sign up user', undefined, error)
+  }
+}
+export const loginUser = async (data: any, serverRequest?: NextApiRequest) => {
+    try {
+        const axios = await getAxiosInstance(serverRequest)
+        const response = await axios.post('/api/user/login', data)
+        return response.data
+    } catch (error) {
+        if (error instanceof ApiError) {
+            throw error
+        }   
+        throw new ApiError(ApiErrorType.SERVER, 'Failed to log in user', undefined, error)
+    }
+}
