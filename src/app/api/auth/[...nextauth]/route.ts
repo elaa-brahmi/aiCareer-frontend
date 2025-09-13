@@ -5,6 +5,10 @@ import GitHubProvider from 'next-auth/providers/github'
 import { User } from '@/types/userType'
 
 const handler = NextAuth({
+  debug: true,
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
@@ -31,7 +35,7 @@ const handler = NextAuth({
         })
 
         const data = await res.json()
-
+        console.log("Login response data:", data)
         if (!res.ok || !data) {
           return null
         }
@@ -46,16 +50,41 @@ const handler = NextAuth({
 
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.accessToken = (user as User).accessToken
+    async jwt({ token, user, account, profile }) {
+    if (account && profile) {
+      const provider = account.provider;
 
-        token.user = {
-          ...(user as User),
-        }
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/oauth-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            provider,
+            providerId: profile.id || profile.sub,
+            email: profile.email,
+            name: profile.name,
+            avatar_url: profile.picture,
+          }),
+        });
+
+        console.log("Backend status:", res.status);
+        const data = await res.json();
+
+        if (!res.ok || !data) throw new Error("Backend did not return valid JSON");
+
+        // Persist into token so it's available on next calls
+        token.accessToken = data.accessToken;
+        token.user = data.user;
+      } catch (error) {
+        console.error("Error sending to backend:", error);
+        throw error;
       }
-      return token
-    },
+    }
+
+    // On subsequent calls, just return the token
+    return token;
+},
+
     async session({ session, token }) {
       session.accessToken = token.accessToken
       session.user = token.user as User

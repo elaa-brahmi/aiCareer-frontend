@@ -10,7 +10,8 @@ import { useState } from "react";
 export default function authPage() {
     const [authLine, setAuthLine] = useState<'sign in to your account' | 'create your account'>('sign in to your account');
   return ( 
-  <div className="flex justify-center mx-auto  w-[400px] p-3 items-center h-auto my-10 rounded-xl bg-gray-200">
+  <div className="flex justify-center items-center min-h-screen">
+    <div className=" flex justify-center w-[90%] md:w-[80%] lg:w-[60%]  p-3  h-auto rounded-xl bg-gray-200">
     <div className="flex flex-col w-5/6 gap-3">
         <div className="flex gap-3">
             <Image src="/octopus.png" alt="Octopus" width={50} height={50}  />
@@ -33,14 +34,15 @@ export default function authPage() {
             <div className="w-full h-[1px] bg-gray-300"></div>
             <p className="text-center text-gray-500 mt-2">or continue with</p>
             <div className="flex mx-auto gap-3 mt-3">
-                <button className="bg-white p-3 rounded-lg"
-                onClick={() => signIn("google")}
+                <button className="bg-white p-3 rounded-lg cursor-pointer"
+                onClick={() => signIn("google" , { callbackUrl: "/" })}
                 ><GoogleIcon /></button>
-                <button className="bg-white p-3 rounded-lg"
-                onClick={() => signIn("github")}
+                <button className="bg-white p-3 rounded-lg cursor-pointer"
+                onClick={() => signIn("github" , { callbackUrl: "/" })}
                 ><GithubIcon /></button>
             </div>
         </div>
+    </div>
     </div>
   </div>)
 }
