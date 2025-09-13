@@ -1,11 +1,13 @@
 "use client"
 import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export default function SignInForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const router=useRouter()
     const onSubmit = async (e: React.FormEvent) => {
       e.preventDefault()
        setError(null)
@@ -19,6 +21,7 @@ export default function SignInForm() {
       console.log("Error:", res.error)
     } else {
       console.log(res)
+      router.push('/')
     }
     }
   return (

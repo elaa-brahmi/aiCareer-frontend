@@ -7,7 +7,7 @@ import { ApiError } from '@/lib/api/errors'
 export const signUpUser = async (data: any, serverRequest?: NextApiRequest) => {
   try {
     const axios = await getAxiosInstance(serverRequest)
-    const response = await axios.post('/api/user/signup', data)
+    const response = await axios.post('/api/auth/signup', data)
     return response.data
   } catch (error) {
     if (error instanceof ApiError) {
@@ -19,7 +19,7 @@ export const signUpUser = async (data: any, serverRequest?: NextApiRequest) => {
 export const loginUser = async (data: any, serverRequest?: NextApiRequest) => {
     try {
         const axios = await getAxiosInstance(serverRequest)
-        const response = await axios.post('/api/user/login', data)
+        const response = await axios.post('/api/auth/login', data)
         return response.data
     } catch (error) {
         if (error instanceof ApiError) {

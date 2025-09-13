@@ -25,7 +25,7 @@ const handler = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
           method: 'POST',
           body: JSON.stringify({
             email: credentials?.email,
@@ -39,10 +39,14 @@ const handler = NextAuth({
         if (!res.ok || !data) {
           return null
         }
+        console.log("Returning user from authorize:", {
+  ...data.user,
+  accessToken: data.accessToken,
+});
          // Whatever you return here becomes `user` in the jwt callback
         return {
           ...data.user,
-          accessToken: data.token,
+          accessToken: data.accessToken,
           expires: data.expires,
         }
       },
@@ -51,38 +55,53 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user, account, profile }) {
-    if (account && profile) {
-      const provider = account.provider;
+      /**
+         * CASE A: Credentials login
+         * Runs on first login after authorize() returns a user
+         */
+        if (user && account?.provider === "credentials") {
+          console.log("Handling credentials login in JWT callback...");
+          token.accessToken = user.accessToken; // directly from authorize()
+          token.user = user; // full user object
+          return token;
+        }
+      /**
+         * CASE B: OAuth login (Google / GitHub)
+         * Runs on first sign-in with an external provider
+         */
+        if (account && profile && account.provider !== "credentials") {
+          try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/oauth-login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                provider: account.provider,
+                providerId: profile.id || profile.sub,
+                email: profile.email,
+                name: profile.name,
+                avatar_url: profile.picture,
+              }),
+            });
 
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/oauth-login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            provider,
-            providerId: profile.id || profile.sub,
-            email: profile.email,
-            name: profile.name,
-            avatar_url: profile.picture,
-          }),
-        });
+            const data = await res.json();
+            console.log("Backend OAuth response:", data);
 
-        console.log("Backend status:", res.status);
-        const data = await res.json();
+            if (!res.ok || !data) throw new Error("Backend did not return valid JSON");
 
-        if (!res.ok || !data) throw new Error("Backend did not return valid JSON");
+            token.accessToken = data.accessToken;
+            token.user = data.user;
+            return token;
+          } catch (error) {
+            console.error("Error sending to backend:", error);
+            throw error;
+          }
+        }
 
-        // Persist into token so it's available on next calls
-        token.accessToken = data.accessToken;
-        token.user = data.user;
-      } catch (error) {
-        console.error("Error sending to backend:", error);
-        throw error;
-      }
-    }
-
-    // On subsequent calls, just return the token
-    return token;
+      /**
+       * CASE C: Returning user session
+       * Happens on subsequent requests — just return the token
+       */
+      return token;
 },
 
     async session({ session, token }) {

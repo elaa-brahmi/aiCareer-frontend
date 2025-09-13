@@ -18,8 +18,8 @@ getSessionUser();
 
   return (
     <div>
-      <h1>Welcome, {session.user.firstName}</h1>
-      <img src={session.user.avatar_url} alt="Profile" className="w-16 h-16 rounded-full" />
+      <h1>Welcome, {session.user?.firstName}</h1>
+      <img src={session.user?.avatar_url} alt="Profile" className="w-16 h-16 rounded-full" />
       <p>JWT Token: {session.accessToken}</p>
     </div>
   );
