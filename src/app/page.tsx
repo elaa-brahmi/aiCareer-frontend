@@ -1,10 +1,10 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import WithoutAuth from '@/components/landingPage/withoutAuth';
+import { getSession } from 'next-auth/react'
+import { useEffect, useState } from 'react';
 
-export default function Home() {
+export default function Dashboard() {
   return (
-    <div className="text-center font-bold">elaaa
-      
-    </div>
-  );
+    <WithoutAuth />
+  )
 }
