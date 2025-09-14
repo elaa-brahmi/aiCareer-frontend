@@ -33,7 +33,7 @@ const HowItWorks = () => {
             </div>
             <div className="flex flex-col md:flex-row gap-4">
                 {steps.map((step,index) => (
-                    <div className="flex px-6 flex-col items-center justify-between gap-3">
+                    <div key={index} className="flex px-6 flex-col items-center justify-between gap-3">
                         <span className="w-12 h-12 flex items-center justify-center rounded-full bg-[var(--dark-amber)] text-white font-bold">
                             {step.index}
                         </span>
