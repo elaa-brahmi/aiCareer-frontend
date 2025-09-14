@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer';
 import { MotionH2, MotionSpan } from '@/components/common/motion-wrapper';
 import { containerVariants, itemVariants } from '@/utils/constants';
 import { Card } from '@/components/ui/card';
-import { Briefcase, File, FileText, MessageCircle, Rocket, Target, Users } from 'lucide-react';
+import { Briefcase, FileText, MessageCircle, Target } from 'lucide-react';
 
 const WhyChooseUsSection = () => {
   const { ref, inView } = useInView({
