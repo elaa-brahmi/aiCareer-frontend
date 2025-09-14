@@ -9,9 +9,7 @@ const WithoutAuth = () =>{
     return(
         <div className="flex flex-col">
             <HeaderWithoutAuth />
-            <Opening 
-                onGetStartedFree={()=>console.log('started')}
-                onLogin={()=>console.log('login')}/>
+            <Opening />
             <EverythingNeeded />
             <HowItWorks />
             <WhatUsersSay />

@@ -37,7 +37,7 @@ const TestimonialsSection = () => {
   }, [inView]);
 
   return (
-    <div className="md:mx-10 flex flex-col justify-center items-center mt-10">
+    <div className="md:mx-10 p-7 md:p-0 flex flex-col justify-center items-center mt-10">
       <h2 className="font-bold md:text-3xl text-center">Loved by Marketers Worldwide</h2>
 
       <div

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 :root {
+  --darker-amber: hsl(32, 100%, 48%); /* equivalent to bg-amber-600 */
   --dark-amber: hsl(32, 81%, 51%); /* equivalent to bg-amber-600 */
+
   --light-amber: hsl(38, 68%, 79%); /* equivalent to bg-amber-500 */
   --radius: 0.65rem;
   --background: oklch(1 0 0);
