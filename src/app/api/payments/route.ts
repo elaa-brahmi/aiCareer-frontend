@@ -1,28 +1,22 @@
 import {NextRequest,NextResponse} from 'next/server'
 import Stripe from 'stripe';
-import {handleCheckoutSessionCompleted,handleSubscriptionDeleted} from '@/lib/payments'
+import {handleCheckoutSessionCompleted,handleSubscriptionDeleted} from '@/services/paymentService'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-    //Confirms the endpoint is alive.
 export const GET = async () => {
     return NextResponse.json({
         status: 'Payments API is running',
         message: 'This endpoint handles Stripe webhook events via POST requests'
     });
 }
-    //This is where Stripe sends webhook events when something happens
-    //  (like a payment completing or a subscription being deleted).
 export const POST = async (req: NextRequest) => {
-    // Validate environment variables
     if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
         return NextResponse.json({
             error: 'Stripe configuration is missing'
         }, { status: 500 });
     }
-    //payload is the raw request body sent by Stripe.
     const payload = await req.text();
     const sig = req.headers.get('stripe-signature');
-    //stripe-signature header ensures the request is legitimate.
     if (!sig) {
         return NextResponse.json({
             error: 'No stripe signature found in request'
@@ -32,11 +26,8 @@ export const POST = async (req: NextRequest) => {
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
     
     try {
-        // Verify the webhook signature
         const event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
         
-        // Create response
-        //Stripe requires the webhook to respond within a few seconds, otherwise it retries.
         const response = new NextResponse(JSON.stringify({ status: 'success' }), {
             status: 200,
             headers: {
@@ -44,10 +35,8 @@ export const POST = async (req: NextRequest) => {
             },
         });
 
-        // Send response immediately
         response.headers.set('Connection', 'close');
         
-        // Process the event after response is sent
         //Non-blocking: ensures your server doesn’t make Stripe wait.
         setTimeout(() => {
             processEvent(event).catch(error => {
@@ -68,26 +57,25 @@ export const POST = async (req: NextRequest) => {
 async function processEvent(event: Stripe.Event) {
     try {
         switch(event.type) {
-            
             case 'checkout.session.completed':
                 const sessionId = event.data.object.id;
                 const session = await stripe.checkout.sessions.retrieve(sessionId, {
                     expand: ['line_items']
                 });
-                await handleCheckoutSessionCompleted({session, stripe});
+                console.log('Stripe session:', session);
+                
+                await handleCheckoutSessionCompleted({ session });
                 break;
-            case 'customer.subscription.deleted':
-                const subscription = event.data.object;
-                console.log('Subscription deleted:', subscription.id);
-                const subscriptionId = event.data.object.id;
-                await handleSubscriptionDeleted({subscriptionId,stripe});
 
+            case 'customer.subscription.deleted':
+                const subscriptionId = event.data.object.id;
+                await handleSubscriptionDeleted({ subscriptionId });
                 break;
+
             default:
                 console.log(`Unhandled event type ${event.type}`);
         }
     } catch (error) {
         console.error('Error in processEvent:', error);
-        // You might want to implement retry logic here or send to a dead letter queue
     }
 }

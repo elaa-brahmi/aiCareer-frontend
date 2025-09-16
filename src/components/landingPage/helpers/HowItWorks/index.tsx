@@ -20,7 +20,7 @@ const HowItWorks = () => {
         }
     ]
     return (
-        <div className="md:mx-10 p-7 md:p-0 mt-10 py-14 bg-gray-50 flex flex-col gap-5">
+        <div className="md:mx-10 p-7  mt-10 py-14 bg-gray-50 flex flex-col gap-5">
             <div className="flex flex-col justify-center items-center gap-3">
                 <MotionH2 variants={itemVariants} className="font-bold md:text-3xl">
                     How It Works
