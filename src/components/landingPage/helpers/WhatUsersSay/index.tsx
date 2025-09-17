@@ -5,24 +5,9 @@ import { Card } from "@/components/ui/card";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { animate, stagger } from "motion";
+import { TESTIMONIALS } from "@/utils/constants";
 
-const testimonials = [
-  {
-    text: `"AI Career helped me find my dream job in just 2 weeks. The job matching is incredibly accurate!"`,
-    name: "Sarah Chen",
-    title: "Software Engineer",
-  },
-  {
-    text: `"The cover letter generator saved me hours of work. Each letter was perfectly tailored!"`,
-    name: "Mike Rodriguez",
-    title: "Marketing Manager",
-  },
-  {
-    text: `"The career chatbot gave me amazing advice for my interviews. Highly recommended!"`,
-    name: "Emma Thompson",
-    title: "UX Designer",
-  },
-];
+const testimonials = TESTIMONIALS
 
 const TestimonialsSection = () => {
   const { ref, inView } = useInView({

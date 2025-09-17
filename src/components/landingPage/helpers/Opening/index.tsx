@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const Opening = () => {
@@ -30,7 +31,7 @@ const Opening = () => {
       </div>
 
       <div className="w-full flex items-center justify-center">
-        <img
+        <Image
           src="/Corporate-job.png"
           className="rounded-md"
           width="500"

@@ -5,7 +5,7 @@ import { MotionDiv } from '@/components/common/motion-wrapper';
 import PopularBadge from '@/components/uiElements/mostPopular';
 type PriceType = {
     name: string;
-    price: number;
+    price: number | string;
     description: string;
     items: string[];
     id: string;

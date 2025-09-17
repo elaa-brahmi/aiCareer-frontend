@@ -1,12 +1,11 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
+
   allowedDevOrigins: [
-    'http://localhost:3000', 
-    'https://900497a53cf7.ngrok-free.app' //  ngrok URL
+    'http://localhost:3000',
+    'https://900497a53cf7.ngrok-free.app'
   ],
 };
 
-
-export default nextConfig;
+module.exports = nextConfig;

@@ -1,8 +1,9 @@
 import { MotionDiv, MotionSection } from '@/components/common/motion-wrapper';
 import { containerVariants, itemVariants } from '@/utils/constants';
 
-import {pricingPlans} from '@/lib/constants';
+import {pricingPlans} from '@/utils/constants';
 import PricingCard from '@/components/uiElements/PricingCard';
+import { PlanType } from '@/utils/constants';
 
 
 
@@ -23,7 +24,7 @@ export default function Pricing(){
             </MotionDiv>
             <div className=" mt-5 relative flex justify-center flex-col
             lg:flex-row items-center lg:items-stretch gap-8">
-                {pricingPlans.map((plan: any)=>(
+                {pricingPlans.map((plan: PlanType)=>(
                 <PricingCard key={plan.id} {...plan}/>
                 ))}
                 

@@ -1,24 +1,9 @@
 import { MotionH2, MotionSpan } from "@/components/common/motion-wrapper";
+import { STEPS } from "@/utils/constants";
 import { containerVariants, itemVariants } from '@/utils/constants';
 
 const HowItWorks = () => {
-    const steps=[
-        {
-            index:"1",
-            title:"Upload Your Resume",
-            description:"Simply upload your resume and let our AI analyze your skills and experience."
-        },
-        {
-            index:"2",
-            title:"Get Matched",
-            description:"Receive personalized job recommendations that match your profile perfectly."
-        },
-        {
-            index:"3",
-            title:"Apply & Succeed",
-            description:"Generate cover letters and apply to jobs with confidence using our tools."
-        }
-    ]
+    const steps= STEPS
     return (
         <div className="md:mx-10 p-7  mt-10 py-14 bg-gray-50 flex flex-col gap-5">
             <div className="flex flex-col justify-center items-center gap-3">
