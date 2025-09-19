@@ -1,8 +1,13 @@
+"use client"
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import {ArrowRight, CheckIcon} from 'lucide-react'
 import { MotionDiv } from '@/components/common/motion-wrapper';
 import PopularBadge from '@/components/uiElements/mostPopular';
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from 'react';
+import { User } from '@/types/userType';
+import { handleSubscriptionDeleted } from '@/services/paymentService';
 type PriceType = {
     name: string;
     price: number | string;
@@ -13,7 +18,7 @@ type PriceType = {
     priceId?: string;
 }
 const listVariants={
-    hidden:{opacity:0,x:-20},//come from left to right
+    hidden:{opacity:0,x:-20},
     visible:{opacity:1,x:0},
     transition:{
         type:'spring',
@@ -24,6 +29,15 @@ const listVariants={
 };
 
 const PricingCard=({name,price,description,items,id,paymentLink}:PriceType)=>{
+    const [user, setUser] = useState<User|null>(null)
+     const { data: session, status } = useSession();
+    useEffect(()=> {
+        if(session && status=== "authenticated"){
+            console.log(session?.user)
+            console.log(session.user?.stripe_subscription_id)
+            setUser(session?.user)
+        }
+    },[])
     return(
         <MotionDiv
         variants={listVariants}
@@ -65,15 +79,43 @@ const PricingCard=({name,price,description,items,id,paymentLink}:PriceType)=>{
                     ))}
                     </ul>
                 </MotionDiv>
-               {paymentLink && (<div 
-                className="space-y-2 flex justify-center font-bold w-full ">
-                    <Link href={paymentLink}
-                     className={cn(
-                    'w-full rounded-full flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--dark-amber)] to-[var(--light-amber)] hover:from-[var(--light-amber)] hover:to-[var(--dark-amber)] text-white border-2 py-2 border-[var(--dark-amber)]'
-                       )}>
-                        Buy now <ArrowRight size={18}/>
+              {status === "unauthenticated" && id==='pro' ? (
+                //user is not logged in
+                <div className="space-y-2 flex justify-center font-bold w-full">
+                    <Link
+                    href="/auth"
+                    className={cn(
+                        "w-full rounded-full flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--dark-amber)] to-[var(--light-amber)] hover:from-[var(--light-amber)] hover:to-[var(--dark-amber)] text-white border-2 py-2 border-[var(--dark-amber)]"
+                    )}
+                    >
+                    Buy now <ArrowRight size={18} />
                     </Link>
-                </div>)}
+                </div>
+                ) : user?.status === "active" && id==='pro' ? (
+                // user is logged in and subscription is active
+                <div className="space-y-2 flex justify-center font-bold w-full">
+                    <button
+                    onClick={() => handleSubscriptionDeleted({subscriptionId:user.stripe_subscription_id})}
+                    className={cn(
+                        "w-full rounded-full flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--dark-amber)] to-[var(--light-amber)] hover:from-[var(--light-amber)] hover:to-[var(--dark-amber)] text-white border-2 py-2 border-[var(--dark-amber)]"
+                    )}
+                    >
+                    Cancel subscription <ArrowRight size={18} />
+                    </button>
+                </div>
+                ) : paymentLink && id=== 'pro'  ? (
+                // user is logged in but no active subscription
+                <div className="space-y-2 flex justify-center font-bold w-full">
+                    <Link
+                    href={paymentLink}
+                    className={cn(
+                        "w-full rounded-full flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--dark-amber)] to-[var(--light-amber)] hover:from-[var(--light-amber)] hover:to-[var(--dark-amber)] text-white border-2 py-2 border-[var(--dark-amber)]"
+                    )}
+                    >
+                    Buy now <ArrowRight size={18} />
+                    </Link>
+                </div>
+                ) : null}
             </div>
 
         </MotionDiv>
