@@ -20,7 +20,7 @@ export default function SignInForm() {
           console.log("Error:", res.message)
         } else {
           console.log(res.message)
-          // Step 2: Automatically sign the user in using credentials provider
+          //Automatically sign the user in using credentials provider
             const signInResponse = await signIn("credentials", {
                 redirect: false,
                 email: email,

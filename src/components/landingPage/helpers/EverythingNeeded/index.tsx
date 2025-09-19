@@ -12,7 +12,7 @@ import { Briefcase, FileText, MessageCircle, Target } from 'lucide-react';
 const WhyChooseUsSection = () => {
   const { ref, inView } = useInView({
     triggerOnce:false,
-    threshold: 0.8, // adjust how much should be visible to trigger
+    threshold: 0.8,
   });
 
   useEffect(() => {
