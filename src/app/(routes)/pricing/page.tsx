@@ -1,13 +1,15 @@
 import { MotionDiv, MotionSection } from '@/components/common/motion-wrapper';
 import { containerVariants, itemVariants } from '@/utils/constants';
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import {pricingPlans} from '@/utils/constants';
 import PricingCard from '@/components/uiElements/PricingCard';
 import { PlanType } from '@/utils/constants';
 
 
 
-export default function Pricing(){
+const Pricing = async() => {
+     const session = await getServerSession(authOptions);
     return(
         <MotionSection
         variants={containerVariants}
@@ -25,7 +27,7 @@ export default function Pricing(){
             <div className=" mt-5 relative flex justify-center flex-col
             lg:flex-row items-center lg:items-stretch gap-8">
                 {pricingPlans.map((plan: PlanType)=>(
-                <PricingCard key={plan.id} {...plan}/>
+                <PricingCard key={plan.id} {...plan} session={session}/>
                 ))}
                 
             </div>
@@ -33,3 +35,4 @@ export default function Pricing(){
         </MotionSection>
     )
 }
+export default Pricing

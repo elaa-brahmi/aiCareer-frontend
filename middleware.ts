@@ -16,5 +16,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/pricing/:path*', '/resume-upload/:path*', '/cover-letter/:path*', '/chat/:path*', '/auth'],
+  matcher: [ '/resume-upload/:path*', '/cover-letter/:path*', '/chat/:path*', '/auth'],
 }

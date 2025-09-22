@@ -8,7 +8,6 @@ import HowItWorks from "@/components/landingPage/helpers/HowItWorks";
 const WithoutAuth = () =>{
     return(
         <div className="flex flex-col">
-            <HeaderWithoutAuth />
             <Opening />
             <EverythingNeeded />
             <HowItWorks />

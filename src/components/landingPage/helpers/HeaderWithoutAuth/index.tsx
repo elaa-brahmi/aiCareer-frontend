@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 const HeaderWithoutAuth = () => {
     return (
-        <div className="grid grid-cols-3 md:grid-cols-3 py-3 px-2">
+        <div className="bg-white grid grid-cols-3 md:grid-cols-3 py-3 px-2">
             <div className="flex gap-2 w-full items-center justify-start md:ms-10 ms-3">
                 <Image src="/octopus.png" width={50} height={50} alt="logo"/>
                 <h1 className="font-bold">Ai Career</h1>

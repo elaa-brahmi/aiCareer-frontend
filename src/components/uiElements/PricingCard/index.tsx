@@ -4,10 +4,8 @@ import { cn } from '@/lib/utils';
 import {ArrowRight, CheckIcon} from 'lucide-react'
 import { MotionDiv } from '@/components/common/motion-wrapper';
 import PopularBadge from '@/components/uiElements/mostPopular';
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from 'react';
-import { User } from '@/types/userType';
 import { handleSubscriptionDeleted } from '@/services/paymentService';
+import { Session } from "next-auth";
 type PriceType = {
     name: string;
     price: number | string;
@@ -16,6 +14,7 @@ type PriceType = {
     id: string;
     paymentLink?: string;
     priceId?: string;
+    session?:Session | null
 }
 const listVariants={
     hidden:{opacity:0,x:-20},
@@ -28,16 +27,8 @@ const listVariants={
 
 };
 
-const PricingCard=({name,price,description,items,id,paymentLink}:PriceType)=>{
-    const [user, setUser] = useState<User|null>(null)
-     const { data: session, status } = useSession();
-    useEffect(()=> {
-        if(session && status=== "authenticated"){
-            console.log(session?.user)
-            console.log(session.user?.stripe_subscription_id)
-            setUser(session?.user)
-        }
-    },[])
+const PricingCard=({name,price,description,items,id,paymentLink,session}:PriceType)=>{
+
     return(
         <MotionDiv
         variants={listVariants}
@@ -79,7 +70,7 @@ const PricingCard=({name,price,description,items,id,paymentLink}:PriceType)=>{
                     ))}
                     </ul>
                 </MotionDiv>
-              {status === "unauthenticated" && id==='pro' ? (
+              {!session?.user && id==='pro' ? (
                 //user is not logged in
                 <div className="space-y-2 flex justify-center font-bold w-full">
                     <Link
@@ -91,11 +82,11 @@ const PricingCard=({name,price,description,items,id,paymentLink}:PriceType)=>{
                     Buy now <ArrowRight size={18} />
                     </Link>
                 </div>
-                ) : user?.status === "active" && id==='pro' ? (
+                ) : session?.user?.status === "active" && id==='pro' ? (
                 // user is logged in and subscription is active
                 <div className="space-y-2 flex justify-center font-bold w-full">
                     <button
-                    onClick={() => handleSubscriptionDeleted({subscriptionId:user.stripe_subscription_id})}
+                    onClick={() => handleSubscriptionDeleted({subscriptionId:session?.user.stripe_subscription_id})}
                     className={cn(
                         "w-full rounded-full flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--dark-amber)] to-[var(--light-amber)] hover:from-[var(--light-amber)] hover:to-[var(--dark-amber)] text-white border-2 py-2 border-[var(--dark-amber)]"
                     )}
