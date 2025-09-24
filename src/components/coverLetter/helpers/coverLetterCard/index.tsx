@@ -22,10 +22,6 @@ const CoverLetterCard: React.FC<CardProps> = ({ title, url, company, date }) => 
           <Eye size={18} />
         </button>
 
-        <button className="hover:text-gray-900">
-          <Edit size={18} />
-        </button>
-
         <a
           href={url}
           download //forces download

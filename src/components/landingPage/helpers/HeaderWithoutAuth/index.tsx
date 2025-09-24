@@ -12,8 +12,8 @@ const HeaderWithoutAuth = () => {
                 <Link href="/pricing" className="cursor-pointer">pricing</Link>
             </div>
             <div className="flex w-full gap-3 items-center justify-end md:pe-10 pe-3">
-                <Link href="/auth" className="bg-white border-none cursor-pointer font-bold text-black">Login</Link>
-                <Link href="/auth" className="cursor-pointer bg-[var(--dark-amber)] rounded-md p-2 text-white font-bold" >Sign up</Link>
+                <Link href="/auth" className="bg-white border-none cursor-pointer md:font-bold text-black">Login</Link>
+                <Link href="/auth" className="cursor-pointer bg-[var(--dark-amber)] rounded-md p-2 text-white md:font-bold" >Sign up</Link>
 
 
             </div>

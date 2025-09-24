@@ -20,11 +20,11 @@ const Pricing = async() => {
         lg:px-8 lg:pt-12">
             <MotionDiv
             variants={itemVariants}
-            className="flex flex-col items-center justify-center w-full pb-12">
+            className="flex p-5 md:p-0 flex-col items-center justify-center w-full pb-12">
                 <h2 className="font-bold text-3xl mb-8 text-black">Choose your plan</h2>
                 <p className="text-gray-500 text-md">Unlock your career potential with our AI-powered job search platform</p>
             </MotionDiv>
-            <div className=" mt-5 relative flex justify-center flex-col
+            <div className=" mt-5 p-4 relative flex justify-center flex-col
             lg:flex-row items-center lg:items-stretch gap-8">
                 {pricingPlans.map((plan: PlanType)=>(
                 <PricingCard key={plan.id} {...plan} session={session}/>

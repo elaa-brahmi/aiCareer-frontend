@@ -98,8 +98,26 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
+      try{
+        //always fetch the latest user data using token.user.id
+         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${token.user.id}`, {
+        headers: {
+          Authorization: `Bearer ${token.accessToken}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch updated user");
+
+      const latestUser = await res.json();
+
+      // Update session with the fresh user data
+      session.user = latestUser;
+    } catch (error) {
+      console.error("Error refreshing session user:", error);
+      session.user = token.user as User; // fallback to the token data
+    }
       session.accessToken = token.accessToken;
-      session.user = token.user as User;
+      //session.user = token.user as User;
       return session;
     },
   },

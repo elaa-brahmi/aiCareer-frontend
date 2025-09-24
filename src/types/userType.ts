@@ -9,7 +9,7 @@ export interface User {
     github_id?: string;
     avatar_url?: string;
     status:string;
-    plan?: string;
+    plan: string;
     price_id?:string;
     created_at: string;
     updated_at?: string;

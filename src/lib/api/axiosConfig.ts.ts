@@ -19,6 +19,7 @@ export const getAxiosInstance = async (
   }
 
   const token = requireAuth ? await fetchToken(serverRequest) : null
+  console.log(token)
 
   if (requireAuth && !token) {
     throw new ApiError(ApiErrorType.AUTH, 'Authentication required - no valid token found', 401)

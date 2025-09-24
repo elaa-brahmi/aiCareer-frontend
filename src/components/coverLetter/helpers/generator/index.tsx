@@ -1,18 +1,24 @@
 "use client"
 
 import { generateCoverLetter } from "@/services/coverLetterService";
-import { useState } from "react";
+import { User } from "@/types/userType";
+import { useSession } from "next-auth/react";
+import { FC, useState } from "react";
 
-const CoverLetterGenerator = () => {
+interface UserProps{
+  user:User
+}
+const CoverLetterGenerator: FC<UserProps>= ({user}) => {
+    const { data: session, update } = useSession(); 
     const [title, setTitle] = useState('')
     const [companyName, setcompanyName] = useState('')
     const [fullName, setfullName] = useState('')
     const [tone, setTone] = useState('')
     const [description, setdescription] = useState('')
-
     const [exp, setExp] = useState('')
     const [skills, setskills] = useState('')
-    const CoverLetterGen = async(e:any) =>{
+
+    const CoverLetterGen = async(e:any) =>{ 
         e.preventDefault();
         const formdata= new FormData()
         formdata.append('title',title)
@@ -27,6 +33,14 @@ const CoverLetterGenerator = () => {
         try{
         const response = await generateCoverLetter(formdata);
         console.log(response)
+        await update();
+        setTitle('')
+        setTone('')
+        setExp('')
+        setcompanyName('')
+        setdescription('')
+        setfullName('')
+        setskills('')
         }
         catch(error){
             console.log(error)
@@ -127,6 +141,7 @@ const CoverLetterGenerator = () => {
           <div>
             <button
               type="submit"
+              disabled={user?.plan === "free" || user?.status === "inactive"}
               className="w-full bg-[var(--dark-amber)] text-white font-medium py-2 px-4 rounded-md transition"
             >
               Generate Cover Letter
