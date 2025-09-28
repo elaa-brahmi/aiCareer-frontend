@@ -19,7 +19,19 @@ export const generateCoverLetter = async (data: any, serverRequest?: NextApiRequ
     throw new ApiError(ApiErrorType.SERVER, 'Failed to checkout user', undefined, error)
   }
 }
-export const getCoverLetters = async (serverRequest?: NextApiRequest) => {
+export const getCoverLetters = async (token?:string) => {
+  try {
+    const axios = await getAxiosInstance(undefined, true,token)
+    const response = await axios.get('/api/coverLetter/all')
+    return response.data
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error
+    }
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to checkout user', undefined, error)
+  }
+}
+/* export const getCoverLetters = async (serverRequest?: NextApiRequest) => {
   try {
     const axios = await getAxiosInstance(serverRequest, true)
     const response = await axios.get('/api/coverLetter/all')
@@ -30,4 +42,4 @@ export const getCoverLetters = async (serverRequest?: NextApiRequest) => {
     }
     throw new ApiError(ApiErrorType.SERVER, 'Failed to checkout user', undefined, error)
   }
-}
+} */

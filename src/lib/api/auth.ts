@@ -12,6 +12,7 @@ export const fetchToken = async (serverRequest?: NextApiRequest): Promise<string
     const sessionToken = await getToken({
       req: serverRequest,
       secret: process.env.NEXTAUTH_SECRET,
+      cookieName: "next-auth.session-token", // explicitly set
     })
     console.log('Server-side sessionToken:', sessionToken)
     return sessionToken ? String(sessionToken) : null
@@ -20,6 +21,7 @@ export const fetchToken = async (serverRequest?: NextApiRequest): Promise<string
   if (!isServer) {
     const session = await getSession()
     console.log('Client-side session:', session)
+    console.log('token from auth.ts:', session?.accessToken)
     return session?.accessToken ?? null
   }
   console.log('No session context available')

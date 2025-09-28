@@ -11,24 +11,33 @@ const instanceCache = new WeakMap<NextApiRequest | object, AxiosInstance>()
 export const getAxiosInstance = async (
   serverRequest?: NextApiRequest,
   requireAuth = false,
+  token?:string
 ): Promise<AxiosInstance> => {
   const cacheKey = serverRequest || {}
 
   if (instanceCache.has(cacheKey)) {
     return instanceCache.get(cacheKey)!
   }
-
-  const token = requireAuth ? await fetchToken(serverRequest) : null
+ let authToken=null
+  // Use the provided token if available, otherwise fetch it
+  if(token){
+    authToken = token
+  }
+  else{
+    authToken = requireAuth ? await fetchToken(serverRequest) : null
+  }
   console.log(token)
 
-  if (requireAuth && !token) {
+  
+
+  if (requireAuth && !authToken) {
     throw new ApiError(ApiErrorType.AUTH, 'Authentication required - no valid token found', 401)
   }
 
   const instance = axios.create({
     baseURL: BASE_URL,
     timeout: 10000,
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
   })
 
   instance.interceptors.response.use(

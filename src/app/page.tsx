@@ -5,7 +5,6 @@ import WithoutAuth from '@/components/landingPage/withoutAuth';
 
 const  Dashboard= async() => {
    const session = await getServerSession(authOptions);
-   console.log('server session', session)
 
 
   return session?.user ? (
