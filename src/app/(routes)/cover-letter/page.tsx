@@ -9,14 +9,6 @@ import { UsageStatistics } from "@/components/coverLetter/helpers/UsageStatistic
 
 export default async function CoverLetterGen() {
   const session = await getServerSession(authOptions);
-
-  if (!session?.user) {
-    return (
-      <div className="p-5 text-red-500">
-        You must be logged in to view this page.
-      </div>
-    );
-  }
   const token =session?.user?.accessToken
   console.log('Token from cookies in page cover letter :', token);
   const covers = await getCoverLetters(token);
