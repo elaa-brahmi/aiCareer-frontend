@@ -1,6 +1,4 @@
-import SavedCovers from "@/components/coverLetter/helpers/savedCovers"
 import { UsageStatistics } from "@/components/coverLetter/helpers/UsageStatistics"
-import WritingTips from "@/components/coverLetter/helpers/writingTips"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import ResumeUploader from "@/components/resume/ResumeUploader";

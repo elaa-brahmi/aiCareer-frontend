@@ -5,7 +5,7 @@ interface CopiesProps{
     covers:CoverLetter[]
 }
 const SavedCovers : React.FC<CopiesProps>= ({covers}) => {
-    console.log('covers in saved covers', covers)
+    //console.log('covers in saved covers', covers)
 
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-sm space-y-4">

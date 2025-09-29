@@ -9,7 +9,7 @@ interface CardProps {
 }
 
 const CoverLetterCard: React.FC<CardProps> = ({ title, url, company, date }) => {
-  console.log('CoverLetterCard props:', { title, url, company, date });
+  //console.log('CoverLetterCard props:', { title, url, company, date });
   return (
     <div className="flex w-full items-center justify-between p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white">
       <div>

@@ -28,11 +28,11 @@ const CoverLetterGenerator: FC<UserProps>= ({user}) => {
         formdata.append('tone',tone)
         formdata.append('exp',exp)
         formdata.append('skills',skills)
-        console.log(title,companyName,description,tone,exp,skills)
+        //console.log(title,companyName,description,tone,exp,skills)
         //api call
         try{
         const response = await generateCoverLetter(formdata);
-        console.log(response)
+        //console.log(response)
         await update();
         setTitle('')
         setTone('')
@@ -43,7 +43,7 @@ const CoverLetterGenerator: FC<UserProps>= ({user}) => {
         setskills('')
         }
         catch(error){
-            console.log(error)
+            //console.log(error)
         }
 
 

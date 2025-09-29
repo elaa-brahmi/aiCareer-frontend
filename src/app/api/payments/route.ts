@@ -62,7 +62,7 @@ async function processEvent(event: Stripe.Event) {
                 const session = await stripe.checkout.sessions.retrieve(sessionId, {
                     expand: ['line_items']
                 });
-                console.log('Stripe session:', session);
+                //console.log('Stripe session:', session);
                 
                 await handleCheckoutSessionCompleted({ session });
                 break;
@@ -73,7 +73,7 @@ async function processEvent(event: Stripe.Event) {
                 break;
 
             default:
-                console.log(`Unhandled event type ${event.type}`);
+                //console.log(`Unhandled event type ${event.type}`);
         }
     } catch (error) {
         console.error('Error in processEvent:', error);

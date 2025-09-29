@@ -47,6 +47,7 @@ const ResumeUploader:React.FC<resumeProps> = ({user}) =>{
     }
 
     setSelectedFile(file);
+    //console.log('selected file ',file)
     //onFileSelect?.(file);
   };
 
