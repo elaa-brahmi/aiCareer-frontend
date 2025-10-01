@@ -16,7 +16,7 @@ export const generateCoverLetter = async (data: any, serverRequest?: NextApiRequ
     if (error instanceof ApiError) {
       throw error
     }
-    throw new ApiError(ApiErrorType.SERVER, 'Failed to checkout user', undefined, error)
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to generate cover letters', undefined, error)
   }
 }
 export const getCoverLetters = async (token?:string) => {
@@ -28,18 +28,6 @@ export const getCoverLetters = async (token?:string) => {
     if (error instanceof ApiError) {
       throw error
     }
-    throw new ApiError(ApiErrorType.SERVER, 'Failed to checkout user', undefined, error)
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to fetch covre letters', undefined, error)
   }
 }
-/* export const getCoverLetters = async (serverRequest?: NextApiRequest) => {
-  try {
-    const axios = await getAxiosInstance(serverRequest, true)
-    const response = await axios.get('/api/coverLetter/all')
-    return response.data
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error
-    }
-    throw new ApiError(ApiErrorType.SERVER, 'Failed to checkout user', undefined, error)
-  }
-} */

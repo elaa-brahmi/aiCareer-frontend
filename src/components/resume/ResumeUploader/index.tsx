@@ -4,6 +4,7 @@ import React, { useCallback, useState } from 'react';
 import { Upload, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { parseResume } from "@/services/resumeService";
 interface resumeProps {
     user:User
 }
@@ -32,7 +33,7 @@ const ResumeUploader:React.FC<resumeProps> = ({user}) =>{
     }
   }, []);
 
-  const handleFileSelection = (file: File) => {
+  const handleFileSelection = async(file: File) => {
     // Validate file type
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
     if (!acceptedFileTypes.includes(fileExtension)) {
@@ -47,8 +48,15 @@ const ResumeUploader:React.FC<resumeProps> = ({user}) =>{
     }
 
     setSelectedFile(file);
-    //console.log('selected file ',file)
-    //onFileSelect?.(file);
+     try {
+      const formData = new FormData();
+      formData.append("resume", file);
+      const response = await parseResume(formData);
+      console.log("Upload success:", response);
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+    
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

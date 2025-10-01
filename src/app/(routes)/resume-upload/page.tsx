@@ -3,9 +3,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import ResumeUploader from "@/components/resume/ResumeUploader";
 import WritingTipsResume from "@/components/resume/helpers/writingTips";
+import { getUserResumes } from "@/services/resumeService";
+import SavedResumes from "@/components/resume/helpers/SavedResumes";
 const ResumeUpload = async ()=>{
     const session = await getServerSession(authOptions);
       const token =session?.user?.accessToken
+      console.log("token in resume upload page ",token)
+      const resumes = await getUserResumes(token);
+      console.log("resumes ",resumes)
     return(
         <div className="md:flex pt-12 md:flex-row mx-auto items-center md:items-start justify-center md:bg-gray-100 w-full p-5">
       <div className="md:flex-2 md:flex md:flex-row md:items-center md:justify-center">
@@ -20,8 +25,8 @@ const ResumeUpload = async ()=>{
             </p>
           </div>
           <ResumeUploader user={session?.user}/>
-          <div className="p-4 w-full">
-            {/* <SavedCovers covers={covers.urls}/> */}
+          <div className="w-full mt-5">
+            <SavedResumes resumes={resumes.resumes}/>
           </div>
         </div>
 
