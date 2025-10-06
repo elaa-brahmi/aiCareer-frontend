@@ -1,8 +1,8 @@
 import { Briefcase, FileChartColumnIncreasing, MessageCircle, TrendingUp } from "lucide-react"
 
-const PopularTopics = async () => {
+const PopularTopics =  () => {
     return (
-        <div className="flex flex-col gap-4 bg-white p-3 justify-center rounded-lg shadow-md w-[250px]">
+        <div className="flex flex-col gap-4 bg-white p-3 justify-center rounded-lg shadow-md w-[300px]">
             <h3>Popular Topics</h3>
             <div>
                 <Briefcase className="inline text-[var(--dark-amber)] mr-2" size={17} />
