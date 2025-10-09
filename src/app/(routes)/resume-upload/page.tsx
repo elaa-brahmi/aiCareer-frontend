@@ -24,7 +24,7 @@ const ResumeUpload = async ()=>{
               Upload your resume to get personalized job recommendations
             </p>
           </div>
-          <ResumeUploader user={session?.user}/>
+          <ResumeUploader user={session?.user} />
           <div className="w-full mt-5">
             <SavedResumes resumes={resumes.resumes}/>
           </div>
