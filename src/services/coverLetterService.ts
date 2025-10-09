@@ -8,9 +8,11 @@ import { fetchToken } from '@/lib/api/auth'
 export const generateCoverLetter = async (data: any, serverRequest?: NextApiRequest) => {
   try {
     const token =  await fetchToken(serverRequest)
-    //console.log('Token being sent to backend:', token) // <-- ADD THIS
+    //console.log('Token being sent to backend:', token) 
     const axios = await getAxiosInstance(serverRequest, true)
-    const response = await axios.post('/api/coverLetter/generate', data)
+    const response = await axios.post('/api/coverLetter/generate', data,{
+  headers: { 'Content-Type': 'application/json' } 
+})
     return response.data
   } catch (error) {
     if (error instanceof ApiError) {

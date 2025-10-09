@@ -9,21 +9,20 @@ interface CardProps {
   company?: string;
   date: string;
   usage?:string;
+  onDelete?: (id: number) => void;
 
 }
 
-const CoverLetterCard: React.FC<CardProps> = ({ id, title, url, company, date,usage }) => {
-  const deleteResume = async(resumeId?:string) =>{
+const CoverLetterCard: React.FC<CardProps> = ({ id, title, url, company, date,usage,onDelete }) => {
+  const deleteResume = async(resumeId?:number) =>{
     if(!resumeId) return;
     try {
-      const response = await deleteUserResume(resumeId);
-      console.log("Delete success:", response);
-      // Optionally, refresh the list of resumes after deletion
+      await deleteUserResume(resumeId);
+      onDelete?.(resumeId);
     } catch (error) {
       console.error("Delete error:", error);
     }
   }
-  //console.log('CoverLetterCard props:', { title, url, company, date });
   return (
     <div className="flex w-full items-center justify-between p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white">
       <div>
@@ -40,7 +39,7 @@ const CoverLetterCard: React.FC<CardProps> = ({ id, title, url, company, date,us
 
         <a
           href={url}
-          download //forces download
+          download 
           className="hover:text-gray-900 cursor-pointer"
         >
           <Download size={18} />
