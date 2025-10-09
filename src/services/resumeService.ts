@@ -28,7 +28,7 @@ export const getUserResumes = async (token?:string) => {
     throw new ApiError(ApiErrorType.SERVER, 'Failed to get resumes', undefined, error)
   }
 }
-export const deleteUserResume = async (resumeId:string, serverRequest?: NextApiRequest) => {
+export const deleteUserResume = async (resumeId:number, serverRequest?: NextApiRequest) => {
   try {
     const axios = await getAxiosInstance(serverRequest,true);
     const response = await axios.delete(`/api/resume/${resumeId}`);

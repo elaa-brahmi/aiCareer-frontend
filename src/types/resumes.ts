@@ -3,7 +3,7 @@ export interface Resume {
     generatedUrl: string;
     fileName: string;
     userId: string;
-    id: string;
+    id: number;
 
     
     

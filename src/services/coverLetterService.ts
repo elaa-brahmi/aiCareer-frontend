@@ -11,7 +11,7 @@ export const generateCoverLetter = async (data: any, serverRequest?: NextApiRequ
     //console.log('Token being sent to backend:', token) 
     const axios = await getAxiosInstance(serverRequest, true)
     const response = await axios.post('/api/coverLetter/generate', data,{
-  headers: { 'Content-Type': 'application/json' } 
+    headers: { 'Content-Type': 'application/json' } 
 })
     return response.data
   } catch (error) {
