@@ -26,7 +26,7 @@ export const getAxiosInstance = async (
   else{
     authToken = requireAuth ? await fetchToken(serverRequest) : null
   }
-  console.log(token)
+  console.log('auth token in axios config ',authToken)
 
   
 
@@ -36,7 +36,7 @@ export const getAxiosInstance = async (
 
   const instance = axios.create({
     baseURL: BASE_URL,
-    timeout: 10000,
+    timeout: 60000,
     headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
   })
 

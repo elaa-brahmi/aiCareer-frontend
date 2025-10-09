@@ -18,9 +18,9 @@ export default function SignInForm() {
     })
     if (res?.error) {
       setError("Invalid email or password")
-      console.log("Error:", res.error)
+      //console.log("Error:", res.error)
     } else {
-      console.log(res)
+      //console.log(res)
       router.push('/')
     }
     }

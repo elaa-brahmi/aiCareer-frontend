@@ -4,6 +4,7 @@ import { generateCoverLetter } from "@/services/coverLetterService";
 import { User } from "@/types/userType";
 import { useSession } from "next-auth/react";
 import { FC, useState } from "react";
+import Loader from "@/components/common/loader"; 
 
 interface UserProps{
   user:User
@@ -17,8 +18,10 @@ const CoverLetterGenerator: FC<UserProps>= ({user}) => {
     const [description, setdescription] = useState('')
     const [exp, setExp] = useState('')
     const [skills, setskills] = useState('')
+    const [isLoading, setIsLoading] = useState(false); 
 
     const CoverLetterGen = async(e:any) =>{ 
+        setIsLoading(true);
         e.preventDefault();
         const formdata= new FormData()
         formdata.append('title',title)
@@ -28,11 +31,10 @@ const CoverLetterGenerator: FC<UserProps>= ({user}) => {
         formdata.append('tone',tone)
         formdata.append('exp',exp)
         formdata.append('skills',skills)
-        console.log(title,companyName,description,tone,exp,skills)
-        //api call
+        console.log(fullName,title,companyName,description,tone,exp,skills)
         try{
         const response = await generateCoverLetter(formdata);
-        console.log(response)
+        //console.log(response)
         await update();
         setTitle('')
         setTone('')
@@ -43,14 +45,24 @@ const CoverLetterGenerator: FC<UserProps>= ({user}) => {
         setskills('')
         }
         catch(error){
-            console.log(error)
+            //console.log(error)
         }
-
+        finally {
+              setIsLoading(false); 
+             window.location.reload();
+            }
 
     }
+   
   return (
     <div className="w-full mx-auto p-4">
       <div className="border border-white rounded-lg shadow-sm p-4 bg-white">
+              {isLoading && (
+        <div className="flex justify-center items-center mb-4">
+          <Loader />
+        </div>
+      )}
+
         <form className="space-y-4" onSubmit={CoverLetterGen}>
             <div>
                 <label className="block text-sm font-medium text-gray-700">Full name *</label>
@@ -142,7 +154,7 @@ const CoverLetterGenerator: FC<UserProps>= ({user}) => {
             <button
               type="submit"
               disabled={user?.plan === "free" || user?.status === "inactive"}
-              className="w-full bg-[var(--dark-amber)] text-white font-medium py-2 px-4 rounded-md transition"
+              className="w-full bg-[var(--dark-amber)] text-white cursor-pointer font-medium py-2 px-4 rounded-md transition"
             >
               Generate Cover Letter
             </button>

@@ -3,16 +3,17 @@ import React from "react";
 interface ProgressBarProps {
   current: number;
   max: number;
+  usage : string;
 }
 
-const CoverLetterProgress: React.FC<ProgressBarProps> = ({ current, max }) => {
+const CoverLetterProgress: React.FC<ProgressBarProps> = ({ current, max,usage }) => {
   const progress = (current / max) * 100;
 
   return (
     <div className="w-full space-y-2">
       <div className="flex justify-between items-center">
         <span className="text-gray-500 text-lg">
-          Cover Letters Generated
+          {usage == "cover-letter" ? ("Cover Letters Generated") : ("Resume Uploads")}
         </span>
         <span className="text-black font-medium">
           {current}/{max}

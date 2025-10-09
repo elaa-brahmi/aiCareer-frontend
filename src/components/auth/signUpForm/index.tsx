@@ -17,9 +17,9 @@ export default function SignInForm() {
         const res = await signUpUser({firstName:firstName,lastName:lastName,email:email,password:password})
         if (res?.error) {
           setError("error signing up")
-          console.log("Error:", res.message)
+          //console.log("Error:", res.message)
         } else {
-          console.log(res.message)
+          //console.log(res.message)
           //Automatically sign the user in using credentials provider
             const signInResponse = await signIn("credentials", {
                 redirect: false,
@@ -29,7 +29,7 @@ export default function SignInForm() {
 
             if (signInResponse?.error) {
                 setError("Failed to sign in after signup");
-                console.log("SignIn Error:", signInResponse.error);
+                //console.log("SignIn Error:", signInResponse.error);
                 return;
             }
           router.push('/')
