@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { parseResume } from "@/services/resumeService";
 import Loader from "@/components/common/loader"; 
+import { useRouter } from "next/navigation";
 interface resumeProps {
     user: User
 }
@@ -15,7 +16,7 @@ const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false); 
   const acceptedFileTypes = ['.pdf'];
-
+  const router = useRouter();
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(true);
@@ -65,8 +66,7 @@ const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
       console.error("Upload error:", error);
     } finally {
       setIsLoading(false); 
-      //refresh the page to show the new resume in the list
-      window.location.reload();
+      router.push("/");
     }
   };
 
@@ -122,7 +122,7 @@ const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
 
             <Button
               onClick={handleChooseFile}
-              className="bg-[var(--dark-amber)] text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              className="bg-[var(--dark-amber)] text-white cursor-pointer px-6 py-2 rounded-lg font-medium transition-colors"
             >
               <Plus className="w-4 h-4 mr-2" />
               Choose File
