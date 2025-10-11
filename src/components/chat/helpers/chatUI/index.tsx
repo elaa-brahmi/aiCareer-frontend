@@ -26,7 +26,6 @@ const ChatUI=() =>{
 
   return (
     <div className="flex flex-col bg-white  rounded-xl shadow-md p-4 space-y-4">
-      {/* Header */}
       <div className="flex items-center space-x-3  pb-3">
         <div className="bg-yellow-400 rounded-full w-10 h-10 flex items-center justify-center">
           <User className="text-white w-5 h-5" />
@@ -37,7 +36,6 @@ const ChatUI=() =>{
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex flex-col space-y-3 max-h-[400px] overflow-y-auto">
         {messages.map((msg, idx) => (
           <div
@@ -62,7 +60,6 @@ const ChatUI=() =>{
         ))}
       </div>
 
-      {/* Input Section */}
       <div className=" pt-3 flex items-center space-x-2">
         <input
           type="text"
