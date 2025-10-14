@@ -5,7 +5,7 @@ const NotificationBell= ({ userId }: { userId: string }) => {
 
   return (
     <div className="relative">
-      <button className="relative">
+      <button className="relative cursor-pointer">
         🔔
         {notifications.some(n => !n.seen) && (
           <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-2 h-2"></span>
