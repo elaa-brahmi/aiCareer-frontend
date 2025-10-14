@@ -1,15 +1,32 @@
+'use client';
+import { useEffect, useState } from 'react';
 import { getUserMatches } from "@/services/resumeService";
 import JobCard from "../jobCard";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const JobsContainer = async () => {
-  const session = await getServerSession(authOptions);
-  const token = session?.user?.accessToken;
-  const jobsData = await getUserMatches(token);
 
-  const jobs = jobsData?.matches || [];
-  //console.log("jobs in job container ", jobs);
+const JobsContainer =  () => {
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 6;
+   const fetchJobs = async (currentPage: number) => {
+    try {
+      const data = await getUserMatches( currentPage, limit);
+      const newJobs = data?.matches || [];
+      console.log("Fetched jobs:", newJobs);
+
+      if (newJobs.length < limit) setHasMore(false);
+      setJobs((prev) => [...prev, ...newJobs]);
+    } catch (err) {
+      console.error('Failed to fetch jobs:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs(page);
+  }, [page]);
+
+
 
   return (
     <div className="w-full  mx-auto p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
@@ -29,6 +46,16 @@ const JobsContainer = async () => {
           <p className="text-gray-500 text-center">No jobs found.</p>
         )}
       </div>
+       {hasMore && (
+        <div className="flex justify-center mt-5">
+          <button
+            onClick={() => setPage((prev) => prev + 1)}
+            className="px-4 py-2 bg-gray-400 rounded-md hover:bg-gray-500 text-white font-semibold transition"
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 };
