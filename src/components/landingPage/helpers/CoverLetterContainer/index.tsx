@@ -1,4 +1,3 @@
-import CoverLetterProgress from "@/components/coverLetter/helpers/coverLetterProgress";
 import { User } from "@/types/userType"
 import { UploadIcon } from "lucide-react";
 
@@ -6,8 +5,8 @@ interface PlanContainer{
     user:User
 }
 const ResumeUploaderContainer:React.FC<PlanContainer> = async({user}) =>{
-    const progress= ((user.cover_letters_this_week || 0 )/ 5) *100;
-    console.log('progress ',progress)
+    const progress= ((user.cover_letters_this_week || 0 )/ 3) *100;
+    console.log('progress cover letter ',progress)
     return (
     <div className="w-[280px] h-[189px] rounded-xl border border-gray-200 bg-white shadow-sm p-6 flex flex-col justify-between">
       <div className="flex items-start justify-between">
@@ -24,7 +23,7 @@ const ResumeUploaderContainer:React.FC<PlanContainer> = async({user}) =>{
                 />
               </div>
                 <span className="text-black font-medium">
-                    {user.cover_letters_this_week}/5
+                    {user.cover_letters_this_week}/3
                 </span>
             </div>
         )
