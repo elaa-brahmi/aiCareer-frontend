@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import NotificationBell from "@/components/common/notificationBell";
 
 interface HeaderProps {
   user: User;
@@ -51,6 +52,8 @@ const HeaderWithAuth: React.FC<HeaderProps> = ({ user }) => {
             <span className="text-xl text-[var(--dark-amber)]">Welcome</span>,{" "}
             {user.firstName} {user.lastName}
           </span>
+          {/* Notification Bell Component */}
+          <NotificationBell userId={user.id} />
           <button
             onClick={() => signOut({ callbackUrl: "/auth" })}
             className="bg-[var(--dark-amber)] text-white font-bold rounded-md px-3 py-2 cursor-pointer hover:bg-opacity-90"
