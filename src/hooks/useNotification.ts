@@ -72,32 +72,8 @@ export function useNotifications(userId: string) {
       console.error('Failed to mark as read:', err)
     }
   }
-
- /*  const markAllAsRead = async () => {
-    try {
-      await markAllNotificationsAsRead()
-      setNotifications(prev => prev.map(n => ({ ...n, seen: true })))
-    } catch (err) {
-      console.error('Failed to mark all as read:', err)
-    }
-  } */
-
-  /* const sendTest = async () => {
-    try {
-      await sendTestNotification(userId)
-    } catch (err) {
-      console.error('Failed to send test notification:', err)
-    }
-  }
-
-  const getByCategory = (category: Notification['category']) =>
-    notifications.filter(n => n.category === category)
-
   return {
     notifications,
     markAsRead,
-    markAllAsRead,
-    sendTest,
-    getByCategory,
-  } */
+  }
 }
