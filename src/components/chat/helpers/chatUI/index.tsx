@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { User, Send } from "lucide-react";
+import { generatechatBotResponse } from "@/services/chatService";
 type Props = {
   initialInput?: string
 }
@@ -12,11 +13,7 @@ const ChatUI = ({ initialInput = "" }: Props) =>{
       text: "Hello John Doe! 👋 I'm your AI Career Assistant. I'm here to help you with job search advice, interview preparation, resume tips, and any other career-related questions you might have.\n\nWhat would you like to know about today?",
       time: "21:35",
     },
-    {
-      type: "user",
-      text: "hi",
-      time: "21:35",
-    },
+   
   ]);
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -33,9 +30,11 @@ const ChatUI = ({ initialInput = "" }: Props) =>{
     }
   }, [initialInput])
 
-  const handleSend = () => {
+  const handleSend = async() => {
     if (!input.trim()) return;
     const newMsg = { type: "user", text: input, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+    const response = await generatechatBotResponse(input);
+    console.log("AI Response:", response);
     setMessages((prev) => [...prev, newMsg]);
     setInput("");
   };
