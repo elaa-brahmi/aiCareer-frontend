@@ -1,8 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { User, Send } from "lucide-react";
+type Props = {
+  initialInput?: string
+}
 
-const ChatUI=() =>{
+const ChatUI = ({ initialInput = "" }: Props) =>{
   const [messages, setMessages] = useState([
     {
       type: "bot",
@@ -16,6 +19,19 @@ const ChatUI=() =>{
     },
   ]);
   const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    if (initialInput && initialInput !== input) {
+      setInput(initialInput)
+      inputRef.current?.focus()
+      const el = inputRef.current
+      if (el) {
+        const len = el.value.length
+        el.setSelectionRange(len, len)
+      }
+    }
+  }, [initialInput])
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -65,6 +81,7 @@ const ChatUI=() =>{
           type="text"
           placeholder="Type your career question..."
           value={input}
+          ref={inputRef}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           className="flex-1 bg-gray-100 text-gray-800 placeholder-gray-500 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
