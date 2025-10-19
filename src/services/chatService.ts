@@ -13,6 +13,18 @@ export const generatechatBotResponse = async (userInput:string, serverRequest?: 
     if (error instanceof ApiError) {
       throw error
     }   
-    throw new ApiError(ApiErrorType.SERVER, 'Failed to delete resume', undefined, error)
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to generate bot response', undefined, error)
+  }
+} 
+export const getUserChatHistory = async ( serverRequest?: NextApiRequest) => {
+  try {
+    const axios = await getAxiosInstance(serverRequest,true);
+    const response = await axios.get(`/api/chat/all` );
+    return response.data.history
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error
+    }   
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to get user history resume', undefined, error)
   }
 } 
