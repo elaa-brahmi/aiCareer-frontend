@@ -1,38 +1,63 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { User, Send } from "lucide-react";
-import { generatechatBotResponse } from "@/services/chatService";
+import { generatechatBotResponse, getUserChatHistory } from "@/services/chatService";
 type Props = {
   initialInput?: string
 }
 
+type ChatMessage = {
+  type: "user" | "bot";
+  text: string;
+  time?: string;
+}
+
 const ChatUI = ({ initialInput = "" }: Props) =>{
-  const [messages, setMessages] = useState([
-    {
-      type: "bot",
-      text: "Hello John Doe! 👋 I'm your AI Career Assistant. I'm here to help you with job search advice, interview preparation, resume tips, and any other career-related questions you might have.\n\nWhat would you like to know about today?",
-      time: "21:35",
-    },
-   
-  ]);
-  const [input, setInput] = useState("");
+
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState<string>("");
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  useEffect(() => {
-    if (initialInput && initialInput !== input) {
-      setInput(initialInput)
-      inputRef.current?.focus()
-      const el = inputRef.current
-      if (el) {
-        const len = el.value.length
-        el.setSelectionRange(len, len)
-      }
+useEffect(() => {
+  if (initialInput && initialInput !== input) {
+    setInput(initialInput);
+    inputRef.current?.focus();
+    const el = inputRef.current;
+    if (el) {
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
     }
-  }, [initialInput])
+  }
+
+  const retrieveChatHistory = async () => {
+    try {
+      const history = await getUserChatHistory();
+      const formattedMessages: ChatMessage[] = history
+        .reverse() // optional: oldest → newest
+        .map((msg: { role: string; content: string; createdAt: string }): ChatMessage => ({
+          type: msg.role === 'user' ? 'user' : 'bot',
+          text: msg.content,
+          time: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }));
+      setMessages(formattedMessages);
+    } catch (error) {
+      console.error('Failed to retrieve chat history:', error);
+    }
+  };
+
+  retrieveChatHistory();
+}, [initialInput]);
+
+  const getNow = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+
+  useEffect(() => {
+    setMessages((prev) => prev.map((m) => (m.time ? m : { ...m, time: getNow() })));
+  }, []);
+
 
   const handleSend = async() => {
     if (!input.trim()) return;
-    const newMsg = { type: "user", text: input, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+    const newMsg: ChatMessage = { type: "user", text: input, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
     const response = await generatechatBotResponse(input);
     console.log("AI Response:", response);
     setMessages((prev) => [...prev, newMsg]);
