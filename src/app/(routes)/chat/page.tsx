@@ -21,7 +21,7 @@ const Chat = ()=>{
                         Get instant answers to your career questions
                     </p>
                 </div>
-                <ChatUI initialInput={selectedQuestion ?? ""} />
+                <ChatUI initialInput={selectedQuestion ?? ""} onSent={() => setSelectedQuestion(null)} />
             </div>
             <div className="md:flex-1 flex flex-col items-center gap-6 mt-18">
                 <QuickQuestions onSelect={(q:string) => setSelectedQuestion(q)} />
