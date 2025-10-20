@@ -2,8 +2,10 @@
 import { useState, useEffect, useRef } from "react";
 import { User, Send } from "lucide-react";
 import { generatechatBotResponse, getUserChatHistory } from "@/services/chatService";
+import BotLoader from "@/components/chat/helpers/botLoader";
 type Props = {
   initialInput?: string
+  onSent?: () => void
 }
 
 type ChatMessage = {
@@ -12,11 +14,13 @@ type ChatMessage = {
   time?: string;
 }
 
-const ChatUI = ({ initialInput = "" }: Props) =>{
+const ChatUI = ({ initialInput = "", onSent }: Props) =>{
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const messagesRef = useRef<HTMLDivElement | null>(null)
 
 useEffect(() => {
   if (initialInput && initialInput !== input) {
@@ -54,14 +58,33 @@ useEffect(() => {
     setMessages((prev) => prev.map((m) => (m.time ? m : { ...m, time: getNow() })));
   }, []);
 
+  // auto-scroll to bottom when messages or loading change
+  useEffect(() => {
+    const el = messagesRef.current
+    if (!el) return
+    // wait a tick for items to render
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight
+    })
+  }, [messages, loading])
+
 
   const handleSend = async() => {
     if (!input.trim()) return;
     const newMsg: ChatMessage = { type: "user", text: input, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
-    const response = await generatechatBotResponse(input);
-    console.log("AI Response:", response);
     setMessages((prev) => [...prev, newMsg]);
     setInput("");
+
+    setLoading(true);
+    const response = await generatechatBotResponse(input);
+  setLoading(false);
+
+  console.log("AI Response:", response.msg);
+  const botMsg: ChatMessage = { type: "bot", text: response.msg, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+  setMessages((prev) => [...prev,botMsg]);
+  // notify parent that message was sent/handled so it can clear selected quick question
+  try { onSent?.() } catch (e) { /* noop */ }
+
   };
 
   return (
@@ -76,7 +99,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-3 max-h-[400px] overflow-y-auto">
+      <div ref={messagesRef} className="flex flex-col space-y-3 max-h-[400px] overflow-y-auto">
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -98,6 +121,13 @@ useEffect(() => {
             </div>
           </div>
         ))}
+        {loading && (
+          <div className={`flex justify-start`}>
+            <div className={`bg-gray-100 text-gray-800 rounded-r-xl rounded-tl-xl p-2 max-w-xs`}>
+              <BotLoader />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className=" pt-3 flex items-center space-x-2">
