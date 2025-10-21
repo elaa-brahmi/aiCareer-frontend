@@ -40,3 +40,21 @@ export const deleteUserResume = async (resumeId:number, serverRequest?: NextApiR
     throw new ApiError(ApiErrorType.SERVER, 'Failed to delete resume', undefined, error)
   }
 } 
+export const getUserMatches = async ( page = 1, limit = 6,serverRequest?: NextApiRequest) => {
+  try {
+    const axios = await getAxiosInstance(serverRequest,true);
+    
+    // Pass page and limit as query params
+    const response = await axios.get('/api/resume/userMatches', {
+      params: { page, limit }
+    });
+    
+    // Backend returns { matches, pagination }
+    return response.data;
+  } catch (error: any) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to get matches', undefined, error);
+  }
+};

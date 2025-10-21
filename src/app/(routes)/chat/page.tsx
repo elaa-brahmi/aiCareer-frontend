@@ -1,8 +1,21 @@
+
+"use client"
+import { useState } from "react"
 import ChatFearures from "@/components/chat/helpers/chatFeatures"
 import ChatUI from "@/components/chat/helpers/chatUI"
 import PopularTopics from "@/components/chat/helpers/popularTopics"
+import QuickQuestions from "@/components/chat/helpers/quickQuestions"
+import UpgradeChat from "@/components/chat/helpers/upgradeChat"
+import { useSession } from "next-auth/react"
 
 const Chat = ()=>{
+    //get the session from next auth (client-side)
+    const { data: session } = useSession()
+    const user = session?.user
+    console.log("User session in Chat page:", user);
+
+    const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null)
+
     return(
         <div className="md:bg-gray-100 w-full p-5 pt-12 flex md:flex-row flex-col  md:ps-12 ">
             
@@ -15,11 +28,13 @@ const Chat = ()=>{
                         Get instant answers to your career questions
                     </p>
                 </div>
-                <ChatUI />
+                <ChatUI initialInput={selectedQuestion ?? ""} onSent={() => setSelectedQuestion(null)} />
             </div>
             <div className="md:flex-1 flex flex-col items-center gap-6 mt-18">
+                <QuickQuestions onSelect={(q:string) => setSelectedQuestion(q)} />
                 <PopularTopics />
                 <ChatFearures />
+                {user.plan=="free" && <UpgradeChat/>}
             </div>
         </div>
     )
