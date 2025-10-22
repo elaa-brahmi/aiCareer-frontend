@@ -15,10 +15,12 @@ export const generateCoverLetter = async (data: any, serverRequest?: NextApiRequ
 })
     return response.data
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw error
-    }
-    throw new ApiError(ApiErrorType.SERVER, 'Failed to generate cover letters', undefined, error)
+    const message =
+      error?.response?.data?.message ||
+      error?.message ||
+      'An unexpected error occurred';
+
+    return { message };
   }
 }
 export const getCoverLetters = async (token?:string) => {

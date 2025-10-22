@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import {SessionProviderWrapper} from "./SessionProviderWrapper";
 import Header from "@/components/common/header";
+import { Toaster } from "@/components/ui/sonner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SessionProviderWrapper>
           <Header />
+          <Toaster />
           {children}
         </SessionProviderWrapper>
       </body>

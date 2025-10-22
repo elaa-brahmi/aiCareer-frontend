@@ -6,6 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const Header = async() => {
   const session = await getServerSession(authOptions);
+  console.log('Session in Header:', session);
   return session?.user ? (
     <HeaderWithAuth user={session?.user} />)
     :( <HeaderWithoutAuth />)

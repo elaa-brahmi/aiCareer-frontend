@@ -2,22 +2,29 @@
 import { useEffect, useState } from 'react';
 import { getUserMatches } from "@/services/resumeService";
 import JobCard from "../jobCard";
+import { toast } from 'sonner'
+import Loader from '@/components/common/loader';
 
 
 const JobsContainer =  () => {
   const [jobs, setJobs] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const limit = 6;
    const fetchJobs = async (currentPage: number) => {
     try {
+      setLoading(true);
       const data = await getUserMatches( currentPage, limit);
       const newJobs = data?.matches || [];
       console.log("Fetched jobs:", newJobs);
 
       if (newJobs.length < limit) setHasMore(false);
       setJobs((prev) => [...prev, ...newJobs]);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
+      toast.error("Failed to fetch jobs. Please try again.");
       console.error('Failed to fetch jobs:', err);
     }
   };
@@ -36,6 +43,14 @@ const JobsContainer =  () => {
       <p className="text-gray-600 mb-5">
         Jobs that match your profile and preferences
       </p>
+      {
+        loading && jobs.length === 0 ? (
+          <span className="flex justify-center items-center mt-5 mx-auto">
+          <Loader />
+
+          </span>
+        ) : null
+      }
 
       <div className="flex flex-col gap-5">
         {Array.isArray(jobs) && jobs.length > 0 ? (

@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { parseResume } from "@/services/resumeService";
 import Loader from "@/components/common/loader"; 
 import { useRouter } from "next/navigation";
+import { toast } from 'sonner';
 interface resumeProps {
     user: User
 }
@@ -41,12 +42,12 @@ const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
   const handleFileSelection = async(file: File) => {
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
     if (!acceptedFileTypes.includes(fileExtension)) {
-      alert(`Please select a valid file type pdf`);
+      toast.warning(`Please select a valid file type pdf`);
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert(`File size must be less than 5 MB`);
+      toast.warning(`File size must be less than 5 MB`);
       return;
     }
 
@@ -59,10 +60,16 @@ const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
 
       const response = await parseResume(formData);
       console.log("Upload success:", response);
+      toast.success("Resume uploaded successfully!");
+      setSelectedFile(null);
+      setIsLoading(false);
 
    
 
     } catch (error) {
+      toast.error("Failed to upload resume. Please try again.");
+      setIsLoading(false);
+      setSelectedFile(null);
       console.error("Upload error:", error);
     } finally {
       setIsLoading(false); 

@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { User, Send } from "lucide-react";
 import { generatechatBotResponse, getUserChatHistory } from "@/services/chatService";
 import BotLoader from "@/components/chat/helpers/botLoader";
+import { toast } from 'sonner'
+
 type Props = {
   initialInput?: string
   onSent?: () => void
@@ -76,14 +78,20 @@ useEffect(() => {
     setInput("");
 
     setLoading(true);
-    const response = await generatechatBotResponse(input);
-  setLoading(false);
+    try{
 
-  console.log("AI Response:", response.msg);
-  const botMsg: ChatMessage = { type: "bot", text: response.msg, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
-  setMessages((prev) => [...prev,botMsg]);
-  // notify parent that message was sent/handled so it can clear selected quick question
-  try { onSent?.() } catch (e) { /* noop */ }
+    const response = await generatechatBotResponse(input);
+    setLoading(false);
+    console.log("AI Response:", response.msg);
+    const botMsg: ChatMessage = { type: "bot", text: response.msg, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+    setMessages((prev) => [...prev,botMsg]);
+    } catch (error) {
+      console.error("Error generating response:", error);
+      setLoading(false);
+      toast.error("you hit the rate limit or network error. Please try again later.");
+    }
+    // notify parent that message was sent/handled so it can clear selected quick question
+    try { onSent?.() } catch (e) { /* noop */ }
 
   };
 

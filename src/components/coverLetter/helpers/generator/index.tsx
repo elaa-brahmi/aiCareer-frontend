@@ -5,6 +5,7 @@ import { User } from "@/types/userType";
 import { useSession } from "next-auth/react";
 import { FC, useState } from "react";
 import Loader from "@/components/common/loader"; 
+import { toast } from 'sonner'
 
 interface UserProps{
   user: User
@@ -44,11 +45,15 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
       setdescription('');
       setfullName('');
       setskills('');
+      toast.success("Cover letter generated successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to generate cover letter. Please try again.");
+      setIsLoading(false);
+      return;
     } finally {
       setIsLoading(false); 
-      window.location.reload();
+      //window.location.reload();
     }
   }
 
