@@ -18,6 +18,7 @@ const CoverLetterCard: React.FC<CardProps> = ({ id, title, url, company, date,us
     if(!resumeId) return;
     try {
       await deleteUserResume(resumeId);
+      window.location.reload();
       onDelete?.(resumeId);
     } catch (error) {
       console.error("Delete error:", error);
