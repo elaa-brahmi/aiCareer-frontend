@@ -48,12 +48,13 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
       toast.success("Cover letter generated successfully!");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to generate cover letter. Please try again.");
+
+      toast.error("Failed to generate cover letter. Please try again or upgrade plan to generate cover letters");
       setIsLoading(false);
       return;
     } finally {
       setIsLoading(false); 
-      //window.location.reload();
+      window.location.reload();
     }
   }
 
