@@ -1,6 +1,6 @@
 
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ChatFearures from "@/components/chat/helpers/chatFeatures"
 import ChatUI from "@/components/chat/helpers/chatUI"
 import PopularTopics from "@/components/chat/helpers/popularTopics"
@@ -9,12 +9,11 @@ import UpgradeChat from "@/components/chat/helpers/upgradeChat"
 import { useSession } from "next-auth/react"
 
 const Chat = ()=>{
-    //get the session from next auth (client-side)
+    const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null)
     const { data: session } = useSession()
     const user = session?.user
-    console.log("User session in Chat page:", user);
+    
 
-    const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null)
 
     return(
         <div className="md:bg-gray-100 w-full p-5 pt-12 flex md:flex-row flex-col  md:ps-12 ">
@@ -34,7 +33,7 @@ const Chat = ()=>{
                 <QuickQuestions onSelect={(q:string) => setSelectedQuestion(q)} />
                 <PopularTopics />
                 <ChatFearures />
-                {user.plan=="free" && <UpgradeChat/>}
+                {user?.plan=="free" && <UpgradeChat/>}
             </div>
         </div>
     )
