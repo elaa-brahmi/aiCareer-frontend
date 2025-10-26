@@ -15,12 +15,10 @@ export const generateCoverLetter = async (data: any, serverRequest?: NextApiRequ
 })
     return response.data
   } catch (error) {
-    const message =
-      error?.response?.data?.message ||
-      error?.message ||
-      'An unexpected error occurred';
-
-    return { message };
+     if (error instanceof ApiError) {
+      throw error
+    }
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to fetch covre letters', undefined, error)
   }
 }
 export const getCoverLetters = async (token?:string) => {
