@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         const data = await res.json();
-        ////console.log("Login response data:", data);
+        console.log("Login response data:", data);
 
         if (!res.ok || !data) return null;
 // Whatever you return here becomes `user` in the jwt callback
