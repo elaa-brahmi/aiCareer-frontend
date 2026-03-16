@@ -29,7 +29,7 @@ const Chat = ()=>{
                 </div>
                 <ChatUI initialInput={selectedQuestion ?? ""} onSent={() => setSelectedQuestion(null)} />
             </div>
-            <div className="md:flex-1 flex flex-col items-center gap-6 mt-18">
+            <div className="md:flex-1 sm:flex sm:flex-row sm:flex-wrap md:flex md:flex-col items-center gap-6 mt-18">
                 <QuickQuestions onSelect={(q:string) => setSelectedQuestion(q)} />
                 <PopularTopics />
                 <ChatFearures />
