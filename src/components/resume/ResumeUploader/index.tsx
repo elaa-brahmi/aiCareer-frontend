@@ -61,7 +61,7 @@ const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
       formData.append("resume", file);
 
       const response = await parseResume(formData);
-      console.log("Upload success:", response);
+      //console.log("Upload success:", response);
        await update();
       toast.success("Resume uploaded successfully!");
       setSelectedFile(null);

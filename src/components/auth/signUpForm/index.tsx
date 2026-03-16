@@ -17,7 +17,7 @@ export default function SignInForm() {
     const res = await signUpUser({ firstName: firstName, lastName: lastName, email: email, password: password })
     if (res?.error) {
       setError("error signing up")
-      console.log("Error:", res.message)
+      //console.log("Error:", res.message)
     } else {
       //console.log(res.message)
       //Automatically sign the user in using credentials provider

@@ -26,7 +26,7 @@ export const getAxiosInstance = async (
   else{
     authToken = requireAuth ? await fetchToken(serverRequest) : null
   }
-  console.log('auth token in axios config ',authToken)
+ // console.log('auth token in axios config ',authToken)
 
   
 

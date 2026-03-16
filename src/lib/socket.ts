@@ -12,7 +12,7 @@ export const initSocket = (userId:string): Socket => {
     })
 
     socket.on('connect', () => {
-      console.log(`Socket connected for user ${userId}`)
+     // console.log(`Socket connected for user ${userId}`)
     })
 
     socket.on('welcome', (message: string) => {

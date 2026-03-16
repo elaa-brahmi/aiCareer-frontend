@@ -82,7 +82,7 @@ useEffect(() => {
 
     const response = await generatechatBotResponse(input);
     setLoading(false);
-    console.log("AI Response:", response.msg);
+   // console.log("AI Response:", response.msg);
     const botMsg: ChatMessage = { type: "bot", text: response.msg, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
     setMessages((prev) => [...prev,botMsg]);
     } catch (error) {

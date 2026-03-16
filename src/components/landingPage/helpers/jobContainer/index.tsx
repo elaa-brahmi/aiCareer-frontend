@@ -17,7 +17,7 @@ const JobsContainer =  () => {
       setLoading(true);
       const data = await getUserMatches( currentPage, limit);
       const newJobs = data?.matches || [];
-      console.log("Fetched jobs:", newJobs);
+      //console.log("Fetched jobs:", newJobs);
 
       if (newJobs.length < limit) setHasMore(false);
       setJobs((prev) => [...prev, ...newJobs]);

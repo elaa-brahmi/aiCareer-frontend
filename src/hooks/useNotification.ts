@@ -17,7 +17,7 @@ export function useNotifications(userId: string) {
       return
     }
 
-    console.log(`Fetching notifications for userId: ${userId}`)
+   // console.log(`Fetching notifications for userId: ${userId}`)
     ;(async () => {
       try {
         const data = await getNotifications()
@@ -35,23 +35,23 @@ export function useNotifications(userId: string) {
       return
     }
 
-    console.log(`Initializing socket for userId: ${userId}`)
+   // console.log(`Initializing socket for userId: ${userId}`)
     const socket = initSocket(userId)
 
     socket.on('connect', () => {
-      console.log(`Socket Connected: id=${socket.id}`)
+      //console.log(`Socket Connected: id=${socket.id}`)
     })
 
     socket.on('disconnect', reason => {
-      console.log(`Socket Disconnected: reason=${reason}`)
+    //  console.log(`Socket Disconnected: reason=${reason}`)
     })
 
     socket.on('connect_error', (error: Error) => {
-      console.error(`Socket Connection error:`, error.message)
+     // console.error(`Socket Connection error:`, error.message)
     })
 
     socket.on('welcome', (message: string) => {
-      console.log('Socket Welcome message received:', message)
+     // console.log('Socket Welcome message received:', message)
     })
 
     socket.on('new-notification', (notif: Notification) => {

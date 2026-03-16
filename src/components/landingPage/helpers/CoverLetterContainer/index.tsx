@@ -6,7 +6,7 @@ interface PlanContainer{
 }
 const ResumeUploaderContainer:React.FC<PlanContainer> = async({user}) =>{
     const progress= ((user.cover_letters_this_week || 0 )/ 3) *100;
-    console.log('progress cover letter ',progress)
+  //  console.log('progress cover letter ',progress)
     return (
     <div className="w-[280px] h-[189px] rounded-xl border border-gray-200 bg-white shadow-sm p-6 flex flex-col justify-between">
       <div className="flex items-start justify-between">

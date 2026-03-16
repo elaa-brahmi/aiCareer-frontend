@@ -12,7 +12,7 @@ interface LandingPageWithAuthProps{
     user:User
 }
 const WithoutAuth : React.FC<LandingPageWithAuthProps> = ({user}) =>{
-    console.log("user in with auth ",user)
+    //console.log("user in with auth ",user)
     return(
         <div className="flex flex-col md:bg-gray-100 gap-6 pt-12 w-full md:px-20">
             <div className="flex flex-col md:justify-start md:items-start gap-5">

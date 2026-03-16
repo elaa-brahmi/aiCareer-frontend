@@ -8,9 +8,9 @@ import SavedResumes from "@/components/resume/helpers/SavedResumes";
 const ResumeUpload = async ()=>{
     const session = await getServerSession(authOptions);
       const token = session?.accessToken as string | undefined;
-      console.log("token in resume upload page ",token)
+     // console.log("token in resume upload page ",token)
       const resumes = await getUserResumes(token);
-      console.log("resumes ",resumes)
+     // console.log("resumes ",resumes)
     return(
         <div className="md:flex pt-12 md:flex-row mx-auto items-center md:items-start justify-center md:bg-gray-100 w-full p-5">
       <div className="md:flex-2 md:flex md:flex-row md:items-center md:justify-center">

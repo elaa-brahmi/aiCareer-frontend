@@ -9,7 +9,7 @@ interface CopiesProps {
 }
 
 const SavedResumes: React.FC<CopiesProps> = ({ resumes }) => {
-  console.log("Resumes in SavedResumes component:", resumes);
+ // console.log("Resumes in SavedResumes component:", resumes);
   const [resumeList, setResumeList] = useState<Resume[]>(resumes);
 
   useEffect(() => {
