@@ -7,6 +7,7 @@ import { signedUpUser } from '@/types/userType'
 
 export const signUpUser = async (data: signedUpUser, serverRequest?: NextApiRequest) => {
   try {
+    console.log('reaching signing up user service with data:', data)
     const axios = await getAxiosInstance(serverRequest)
     const response = await axios.post('/api/auth/signup', data)
     return response.data

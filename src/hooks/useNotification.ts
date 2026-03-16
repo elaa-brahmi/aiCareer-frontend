@@ -67,7 +67,7 @@ export function useNotifications(userId: string) {
   const markAsRead = async (notificationId: string) => {
     try {
       await markNotificationAsRead(notificationId)
-      setNotifications(prev => prev.map(n => (n.id === notificationId ? { ...n, seen: true } : n)))
+      setNotifications(prev => prev.map(n => (n._id === notificationId ? { ...n, seen: true } : n)))
     } catch (err) {
       console.error('Failed to mark as read:', err)
     }

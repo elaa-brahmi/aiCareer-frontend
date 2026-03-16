@@ -7,7 +7,7 @@ import { getUserResumes } from "@/services/resumeService";
 import SavedResumes from "@/components/resume/helpers/SavedResumes";
 const ResumeUpload = async ()=>{
     const session = await getServerSession(authOptions);
-      const token =session?.user?.accessToken
+      const token = session?.accessToken as string | undefined;
       console.log("token in resume upload page ",token)
       const resumes = await getUserResumes(token);
       console.log("resumes ",resumes)
@@ -24,7 +24,7 @@ const ResumeUpload = async ()=>{
               Upload your resume to get personalized job recommendations
             </p>
           </div>
-          <ResumeUploader user={session?.user} />
+          {session?.user && <ResumeUploader user={session.user} />}
           <div className="w-full mt-5">
             <SavedResumes resumes={resumes.resumes}/>
           </div>
@@ -34,7 +34,7 @@ const ResumeUpload = async ()=>{
       <div className="md:flex-1 mt-18">
         <div className="flex flex-col gap-6">
           <WritingTipsResume />
-          { session?.user?.plan ==="free" && (<UsageStatistics user={session?.user} usage="resume" />)}
+          { session?.user?.plan === "free" && session.user && (<UsageStatistics user={session.user} usage="resume" />)}
         </div>
       </div>
     </div>

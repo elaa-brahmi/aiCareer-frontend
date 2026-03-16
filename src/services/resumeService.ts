@@ -58,3 +58,42 @@ export const getUserMatches = async ( page = 1, limit = 6,serverRequest?: NextAp
     throw new ApiError(ApiErrorType.SERVER, 'Failed to get matches', undefined, error);
   }
 };
+
+export const saveJobForLater = async (matchId: string, serverRequest?: NextApiRequest) => {
+  try {
+    const axios = await getAxiosInstance(serverRequest, true);
+    const response = await axios.post(`/api/jobs/save/${matchId}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to save job for later', undefined, error);
+  }
+};
+
+export const getSavedJobs = async (serverRequest?: NextApiRequest) => {
+  try {
+    const axios = await getAxiosInstance(serverRequest, true);
+    const response = await axios.get('/api/jobs/saved');
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to get saved jobs', undefined, error);
+  }
+};
+
+export const removeSavedJob = async (matchId: string, serverRequest?: NextApiRequest) => {
+  try {
+    const axios = await getAxiosInstance(serverRequest, true);
+    const response = await axios.delete(`/api/jobs/save/${matchId}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(ApiErrorType.SERVER, 'Failed to remove saved job', undefined, error);
+  }
+};

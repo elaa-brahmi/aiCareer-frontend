@@ -8,7 +8,7 @@ const Header = async() => {
   const session = await getServerSession(authOptions);
   console.log('Session in Header:', session);
   return session?.user ? (
-    <HeaderWithAuth user={session?.user} />)
+    <HeaderWithAuth user={session.user} />)
     :( <HeaderWithoutAuth />)
 }
 export default Header

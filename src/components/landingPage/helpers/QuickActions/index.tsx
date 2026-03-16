@@ -1,4 +1,4 @@
-import { Upload, FileText, Cloud, MessageCircle } from "lucide-react";
+import { Upload, FileText, Cloud, MessageCircle, Bookmark } from "lucide-react";
 import Link from "next/link";
 
 const QuickActions = async() => {
@@ -12,19 +12,24 @@ const QuickActions = async() => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mt-6">
-        <button className="flex items-center justify-center gap-2 bg-[var(--dark-amber)]  text-white font-semibold px-6 py-3 rounded-md transition-all duration-200 w-full sm:w-1/3">
+        <button className="flex items-center justify-center gap-2 bg-[var(--dark-amber)]  text-white font-semibold px-6 py-3 rounded-md transition-all duration-200 w-full sm:w-1/4">
           <Upload className="w-4 h-4" />
           
           <Link href="/resume-upload">Upload Resume</Link>
         </button>
 
-        <button className="flex items-center justify-center gap-2 border border-gray-300 text-gray-800 hover:bg-gray-50 font-semibold px-6 py-3 rounded-md transition-all duration-200 w-full sm:w-1/3">
+        <button className="flex items-center justify-center gap-2 border border-gray-300 text-gray-800 hover:bg-gray-50 font-semibold px-6 py-3 rounded-md transition-all duration-200 w-full sm:w-1/4">
           <FileText className="w-4 h-4" />
           <Link href="/cover-letter">Generate Cover Letter</Link>
         </button>
-         <button className="flex items-center justify-center gap-2 border border-gray-300 text-gray-800 hover:bg-gray-50 font-semibold px-6 py-3 rounded-md transition-all duration-200 w-full sm:w-1/3">
+         <button className="flex items-center justify-center gap-2 border border-gray-300 text-gray-800 hover:bg-gray-50 font-semibold px-6 py-3 rounded-md transition-all duration-200 w-full sm:w-1/4">
           <MessageCircle className="w-4 h-4" />
-          <Link href="/chat">chat with ai</Link>
+          <Link href="/chat">Chat with AI</Link>
+        </button>
+
+        <button className="flex items-center justify-center gap-2 border border-gray-300 text-gray-800 hover:bg-gray-50 font-semibold px-6 py-3 rounded-md transition-all duration-200 w-full sm:w-1/4">
+          <Bookmark className="w-4 h-4" />
+          <Link href="/saved-jobs">Saved Jobs</Link>
         </button>
        
       </div>

@@ -16,8 +16,8 @@ const NotificationBell= ({ userId }: { userId: string }) => {
       <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg">
         {notifications.map(n => (
           <div
-            key={n.id}
-            onClick={() => markAsRead(n.id)}
+            key={n._id}
+            onClick={() => markAsRead(n._id)}
             className={`p-2 cursor-pointer ${n.seen ? 'opacity-60' : 'bg-gray-100'}`}
           >
             {n.message}

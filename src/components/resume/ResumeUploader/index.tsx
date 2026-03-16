@@ -8,11 +8,13 @@ import { parseResume } from "@/services/resumeService";
 import Loader from "@/components/common/loader"; 
 import { useRouter } from "next/navigation";
 import { toast } from 'sonner';
+import { useSession } from "next-auth/react";
 interface resumeProps {
     user: User
 }
 
 const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
+  const { update } = useSession();
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false); 
@@ -60,11 +62,12 @@ const ResumeUploader: React.FC<resumeProps> = ({ user }) => {
 
       const response = await parseResume(formData);
       console.log("Upload success:", response);
+       await update();
       toast.success("Resume uploaded successfully!");
       setSelectedFile(null);
       setIsLoading(false);
 
-   
+    
 
     } catch (error) {
       toast.error("Failed to upload resume. Please try again.");

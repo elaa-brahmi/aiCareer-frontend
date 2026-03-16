@@ -4,7 +4,7 @@ export interface CoverLetter {
     companyName: string;
     title: string;
     userId: string;
-    id: string;
+    _id: string;
 
     
     

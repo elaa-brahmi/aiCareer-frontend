@@ -9,6 +9,7 @@ interface CopiesProps {
 }
 
 const SavedResumes: React.FC<CopiesProps> = ({ resumes }) => {
+  console.log("Resumes in SavedResumes component:", resumes);
   const [resumeList, setResumeList] = useState<Resume[]>(resumes);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ const SavedResumes: React.FC<CopiesProps> = ({ resumes }) => {
   }, [resumes]);
 
   const handleDelete = (id: number) => {
-    setResumeList((prev) => prev.filter((resume) => resume.id !== id));
+    setResumeList((prev) => prev.filter((resume) => resume._id !== id));
   };
 
   return (
@@ -28,8 +29,8 @@ const SavedResumes: React.FC<CopiesProps> = ({ resumes }) => {
         {resumeList.length > 0 ? (
           resumeList.map((resume) => (
             <CoverLetterCard
-              key={resume.id}
-              id={resume.id}
+              key={resume._id}
+              id={resume._id}
               title={resume.fileName}
               url={resume.generatedUrl}
               date={new Date(resume.createdAt).toLocaleDateString("en-CA")}

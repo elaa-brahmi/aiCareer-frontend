@@ -9,7 +9,7 @@ import { UsageStatistics } from "@/components/coverLetter/helpers/UsageStatistic
 
 export default async function CoverLetterGen() {
   const session = await getServerSession(authOptions);
-  const token =session?.user?.accessToken
+  const token = session?.accessToken as string | undefined;
   ////console.log('Token from cookies in page cover letter :', token);
   const covers = await getCoverLetters(token);
 
@@ -24,7 +24,7 @@ export default async function CoverLetterGen() {
             </h2>
             
           </div>
-          <CoverLetterGenerator user={session?.user}/>
+          {session?.user && <CoverLetterGenerator user={session.user}/>}
           <div className="p-4 w-full">
             <SavedCovers covers={covers.urls}/>
           </div>
@@ -34,7 +34,7 @@ export default async function CoverLetterGen() {
       <div className="md:flex-1 mt-18">
         <div className="flex flex-col gap-6">
           <WritingTips />
-          { session?.user?.plan ==="free" && (<UsageStatistics user={session?.user} usage="cover-letter" />)}
+          { session?.user?.plan === "free" && session.user && (<UsageStatistics user={session.user} usage="cover-letter" />)}
         </div>
       </div>
     </div>

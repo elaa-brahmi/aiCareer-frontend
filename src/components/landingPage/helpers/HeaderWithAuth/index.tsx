@@ -29,7 +29,7 @@ const HeaderWithAuth: React.FC<HeaderProps> = ({ user }) => {
         </div>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center justify-center gap-6">
+        <nav className="hidden lg:flex items-center justify-center gap-6">
           <Link href="/" className="hover:text-[var(--dark-amber)]">
             Dashboard
           </Link>
@@ -47,13 +47,13 @@ const HeaderWithAuth: React.FC<HeaderProps> = ({ user }) => {
           </Link>
         </nav>
 
-        <div className="hidden md:flex items-center justify-end gap-5">
+        <div className="hidden lg:flex items-center justify-end gap-5">
           <span className="text-black font-bold">
             <span className="text-xl text-[var(--dark-amber)]">Welcome</span>,{" "}
             {user.firstName} {user.lastName}
           </span>
           {/* Notification Bell Component */}
-          <NotificationBell userId={user.id} />
+          <NotificationBell userId={user._id} />
           <button
             onClick={() => signOut({ callbackUrl: "/auth" })}
             className="bg-[var(--dark-amber)] text-white font-bold rounded-md px-3 py-2 cursor-pointer hover:bg-opacity-90"
@@ -63,7 +63,7 @@ const HeaderWithAuth: React.FC<HeaderProps> = ({ user }) => {
         </div>
 
         {/* Mobile version */}
-        <div className="flex md:hidden absolute end-2 justify-end">
+        <div className="flex lg:hidden absolute end-2 justify-end">
           <button onClick={toggleMenu} className="text-black">
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -71,7 +71,7 @@ const HeaderWithAuth: React.FC<HeaderProps> = ({ user }) => {
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg border-t animate-slideDown">
+        <div className="lg:hidden bg-white shadow-lg border-t animate-slideDown">
           <div className="flex flex-col space-y-4 p-4">
             <Link
               href="/"

@@ -1,11 +1,35 @@
+"use client";
+
 import { Clock, MapPin } from "lucide-react";
 import Link from "next/link";
+import { saveJobForLater } from "@/services/resumeService";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface JobCardProps {
   job: any;
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
+
+  const handleSaveJob = async () => {
+    try {
+      setIsSaving(true);
+      await saveJobForLater(job._id);
+      toast.success("Job saved! Redirecting to saved jobs...");
+      setTimeout(() => {
+        router.push("/saved-jobs");
+      }, 1000);
+    } catch (error) {
+      console.error("Error saving job:", error);
+      toast.error("Failed to save job. Please try again.");
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
       <div className="flex justify-between items-start mb-2">
@@ -41,11 +65,17 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         >
           Apply Now
         </a>
-        <button className="border border-gray-300 cursor-pointer text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50">
-          Save for Later
-        </button>
+        {!job.saved && (
+          <button 
+            className="border border-gray-300 cursor-pointer text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleSaveJob}
+            disabled={isSaving}
+          >
+            {isSaving ? "Saving..." : "Save for Later"}
+          </button>
+        )}
         <button className="text-black font-medium cursor-pointer">
-          <Link href="/cover-letter" >Generate Cover Letter</Link>
+          <Link href="/cover-letter">Generate Cover Letter</Link>
         </button>
       </div>
     </div>

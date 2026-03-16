@@ -1,8 +1,13 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import { User } from "@/types/userType";
+import { JWT } from "next-auth/jwt";
+
+interface CustomUser extends User {
+  accessToken?: string;
+}
 
 export const authOptions: NextAuthOptions = {
   debug: true,
@@ -49,15 +54,16 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, profile }): Promise<JWT & { user?: CustomUser; accessToken?: string }> {
       /**
          * CASE A: Credentials login
          * Runs on first login after authorize() returns a user
          */
       if (user && account?.provider === "credentials") {
-        token.accessToken = user.accessToken;
-        token.user = user;
-        return token;
+        const customUser = user as unknown as CustomUser;
+        token.accessToken = customUser.accessToken;
+        token.user = customUser;
+        return token as JWT & { user?: CustomUser; accessToken?: string };
       }
 
       /**
@@ -66,15 +72,16 @@ export const authOptions: NextAuthOptions = {
          */
       if (account && profile && account.provider !== "credentials") {
         try {
+          const oauthProfile = profile as any;
           const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/oauth-login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               provider: account.provider,
-              providerId: profile.id || profile.sub,
-              email: profile.email,
-              name: profile.name,
-              avatar_url: profile.picture,
+              providerId: oauthProfile.id || oauthProfile.sub,
+              email: oauthProfile.email,
+              name: oauthProfile.name,
+              avatar_url: oauthProfile.image || oauthProfile.picture,
             }),
           });
 
@@ -83,7 +90,7 @@ export const authOptions: NextAuthOptions = {
 
           token.accessToken = data.accessToken;
           token.user = data.user;
-          return token;
+          return token as JWT & { user?: CustomUser; accessToken?: string };
         } catch (error) {
           console.error("Error sending to backend:", error);
           throw error;
@@ -97,27 +104,25 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
 
-    async session({ session, token }) {
-      try{
-        //always fetch the latest user data using token.user.id
-         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${token.user.id}`, {
-        headers: {
-          Authorization: `Bearer ${token.accessToken}`,
-        },
-      });
-
-      if (!res.ok) throw new Error("Failed to fetch updated user");
-
-      const latestUser = await res.json();
-
-      // Update session with the fresh user data
-      session.user = latestUser;
-    } catch (error) {
-      console.error("Error refreshing session user:", error);
-      session.user = token.user as User; // fallback to the token data
-    }
-      session.accessToken = token.accessToken;
-      //session.user = token.user as User;
+    async session({ session, token }): Promise<Session> {
+      const customToken = token as JWT & { user?: CustomUser; accessToken?: string };
+      try {
+        if (customToken?.user?._id) {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${customToken.user._id}`,
+            { headers: { Authorization: `Bearer ${customToken.accessToken}` } }
+          );
+          if (!res.ok) throw new Error("Failed to fetch updated user");
+          const latestUser = await res.json();
+          session.user = latestUser;
+        } else {
+          session.user = customToken.user as User;
+        }
+      } catch (error) {
+        console.error("Error refreshing session user:", error);
+        session.user = customToken.user as User;
+      }
+      session.accessToken = customToken.accessToken;
       return session;
     },
   },

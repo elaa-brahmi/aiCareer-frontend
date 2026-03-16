@@ -24,7 +24,7 @@ const WithoutAuth : React.FC<LandingPageWithAuthProps> = ({user}) =>{
                     <PlanContainer user={user} />
                     <ResumeUploaderContainer user={user} />
                     <CoverLetterContainer user={user} />
-                    <JobMatchesContainer user={user} />
+                   {/*  <JobMatchesContainer user={user} /> */}
                 </div>
                 <QuickActions />
                 <JobsContainer />
