@@ -21,7 +21,7 @@ export default function SignInForm() {
       //console.log("Error:", res.error)
     } else {
       //console.log(res)
-      router.push('/')
+      window.location.href = '/';
     }
     }
   return (

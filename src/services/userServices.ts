@@ -10,6 +10,7 @@ export const signUpUser = async (data: signedUpUser, serverRequest?: NextApiRequ
    // console.log('reaching signing up user service with data:', data)
     const axios = await getAxiosInstance(serverRequest)
     const response = await axios.post('/api/auth/signup', data)
+    console.log('Signup response:', response)
     return response.data
   } catch (error) {
     if (error instanceof ApiError) {
