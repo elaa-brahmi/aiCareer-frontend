@@ -1,4 +1,3 @@
-
 "use client"
 import { useEffect, useState } from "react"
 import ChatFearures from "@/components/chat/helpers/chatFeatures"
@@ -8,15 +7,13 @@ import QuickQuestions from "@/components/chat/helpers/quickQuestions"
 import UpgradeChat from "@/components/chat/helpers/upgradeChat"
 import { useSession } from "next-auth/react"
 
-const Chat = ()=>{
+const Chat = () => {
     const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null)
     const { data: session } = useSession()
     const user = session?.user
-    
 
-
-    return(
-        <div className="md:bg-gray-100 w-full p-5 pt-12 flex md:flex-row flex-col  md:ps-12 ">
+    return (
+        <div className="md:bg-gray-100 w-full p-5 pt-12 flex flex-col md:flex-row md:ps-12">
             
             <div className="md:flex-2">
                 <div className="mb-4 md:ps-8">
@@ -29,11 +26,12 @@ const Chat = ()=>{
                 </div>
                 <ChatUI initialInput={selectedQuestion ?? ""} onSent={() => setSelectedQuestion(null)} />
             </div>
-            <div className="md:flex-1 sm:flex sm:flex-row sm:flex-wrap md:flex md:flex-col items-center gap-6 mt-18">
-                <QuickQuestions onSelect={(q:string) => setSelectedQuestion(q)} />
+
+            <div className="flex flex-col items-center gap-8 mt-10 md:mt-18 md:flex-1 md:gap-6">
+                <QuickQuestions onSelect={(q: string) => setSelectedQuestion(q)} />
                 <PopularTopics />
                 <ChatFearures />
-                {user?.plan=="free" && <UpgradeChat/>}
+                {user?.plan === "free" && <UpgradeChat />}
             </div>
         </div>
     )
