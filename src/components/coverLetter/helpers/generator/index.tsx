@@ -1,78 +1,131 @@
-"use client"
+"use client";
 
 import { generateCoverLetter } from "@/services/coverLetterService";
 import { User } from "@/types/userType";
 import { useSession } from "next-auth/react";
 import { FC, useState } from "react";
-import Loader from "@/components/common/loader"; 
-import { toast } from 'sonner';
+import Loader from "@/components/common/loader";
+import { toast } from "sonner";
 
 interface UserProps {
-  user: User
+  user: User;
 }
 
-// 1. Define your suggestion list here
-const SKILL_SUGGESTIONS = [
-  "Next.js", "React.js", "TypeScript", "Tailwind CSS", "Node.js", 
-  "Python", "PostgreSQL", "MongoDB", "AWS", "Docker", "GraphQL", 
-  "Figma", "Redux", "Express.js", "Jest", "Cypress"
+// 🔹 Skills list (you can later move this to API/db)
+const SKILLS = [
+  "Next.js",
+  "React",
+  "Angular",
+  "TypeScript",
+  "JavaScript",
+  "Node.js",
+  "Spring Boot",
+  "Docker",
+  "Kubernetes",
+  "Tailwind CSS",
+  "MongoDB",
+  "PostgreSQL",
 ];
 
 const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
-  const { data: session, update } = useSession(); 
-  const [title, setTitle] = useState('');
-  const [companyName, setcompanyName] = useState('');
-  const [fullName, setfullName] = useState('');
-  const [tone, setTone] = useState('Professional');
-  const [description, setdescription] = useState('');
-  const [exp, setExp] = useState('');
-  const [skills, setskills] = useState('');
-  const [isLoading, setIsLoading] = useState(false); 
+  const { data: session, update } = useSession();
 
-  const CoverLetterGen = async (e: React.FormEvent) => { 
+  const [title, setTitle] = useState("");
+  const [companyName, setcompanyName] = useState("");
+  const [fullName, setfullName] = useState("");
+  const [tone, setTone] = useState("");
+  const [description, setdescription] = useState("");
+  const [exp, setExp] = useState("");
+
+  // 🔥 Skills state
+  const [skills, setskills] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 🔹 Handle typing
+  const handleSkillsChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+    setskills(value);
+
+    const words = value.split(/[\s,]+/);
+    const lastWord = words[words.length - 1].toLowerCase();
+
+    if (!lastWord) {
+      setShowSuggestions(false);
+      return;
+    }
+
+    const filtered = SKILLS.filter((skill) =>
+      skill.toLowerCase().startsWith(lastWord)
+    );
+
+    setSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+  };
+
+  // 🔹 Handle click on suggestion
+  const handleSelectSkill = (skill: string) => {
+    const words = skills.split(/[\s,]+/);
+    words.pop(); // remove current word
+
+    const newValue = [...words, skill].join(", ") + ", ";
+    setskills(newValue);
+
+    setShowSuggestions(false);
+  };
+
+  const CoverLetterGen = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
 
     const formdata = new FormData();
-    formdata.append('title', title);
-    formdata.append('fullName', fullName);
-    formdata.append('companyName', companyName);
-    formdata.append('description', description);
-    formdata.append('tone', tone);
-    formdata.append('exp', exp);
-    formdata.append('skills', skills);
+    formdata.append("title", title);
+    formdata.append("fullName", fullName);
+    formdata.append("companyName", companyName);
+    formdata.append("description", description);
+    formdata.append("tone", tone);
+    formdata.append("exp", exp);
+    formdata.append("skills", skills);
 
     try {
-      await generateCoverLetter(formdata);
+      const response = await generateCoverLetter(formdata);
       await update();
-      
-      // Reset form
-      setTitle('');
-      setTone('Professional');
-      setExp('');
-      setcompanyName('');
-      setdescription('');
-      setfullName('');
-      setskills('');
-      
+
+      setTitle("");
+      setTone("");
+      setExp("");
+      setcompanyName("");
+      setdescription("");
+      setfullName("");
+      setskills("");
+
       toast.success("Cover letter generated successfully!");
-      
-      // Refresh to show new data if necessary
-      window.location.reload();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to generate cover letter. Please try again.");
+      toast.error(
+        "Failed to generate cover letter. Please try again or upgrade plan"
+      );
+      setIsLoading(false);
+      return;
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
+      window.location.reload();
     }
-  }
+  };
 
   return (
     <div className="w-full mx-auto p-4">
       <div className="border border-white rounded-lg shadow-sm p-4 bg-white">
         <form className="space-y-4" onSubmit={CoverLetterGen}>
+          {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full name *</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Full name *
+            </label>
             <input
               value={fullName}
               onChange={(e) => setfullName(e.target.value)}
@@ -83,9 +136,12 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
             />
           </div>
 
+          {/* Title + Company */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Job Title *</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Job Title *
+              </label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -97,7 +153,9 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Company Name *</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Company Name *
+              </label>
               <input
                 value={companyName}
                 onChange={(e) => setcompanyName(e.target.value)}
@@ -109,8 +167,11 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
             </div>
           </div>
 
+          {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Job Description *</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Job Description *
+            </label>
             <textarea
               value={description}
               onChange={(e) => setdescription(e.target.value)}
@@ -120,22 +181,27 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
             />
           </div>
 
+          {/* Tone + Experience */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Tone</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Tone
+              </label>
               <select
                 value={tone}
                 onChange={(e) => setTone(e.target.value)}
                 className="mt-1 w-full rounded-md bg-gray-100 p-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
               >
-                <option value="Professional">Professional</option>
-                <option value="Casual">Casual</option>
-                <option value="Friendly">Friendly</option>
+                <option>Professional</option>
+                <option>Casual</option>
+                <option>Friendly</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Years of Experience *</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Years of Experience *
+              </label>
               <input
                 value={exp}
                 onChange={(e) => setExp(e.target.value)}
@@ -147,31 +213,42 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
             </div>
           </div>
 
-          {/* AUTOCOMPLETE SKILLS INPUT */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Key Skills *</label>
-            <input
-              list="skills-options" // This ID must match the datalist ID below
+          {/* 🔥 Skills with autocomplete */}
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700">
+              Key Skills *
+            </label>
+
+            <textarea
               value={skills}
-              onChange={(e) => setskills(e.target.value)}
+              onChange={handleSkillsChange}
               required
-              placeholder="Start typing (e.g. Nextjs)..."
-              className="mt-1 bg-gray-100 w-full rounded-md p-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              placeholder="Start typing (e.g. 'n' → Next.js)..."
+              className="mt-1 bg-gray-100 w-full rounded-md p-2 focus:ring-2 focus:ring-orange-500 focus:outline-none h-20"
             />
-            <datalist id="skills-options">
-              {SKILL_SUGGESTIONS.map((skill) => (
-                <option key={skill} value={skill} />
-              ))}
-            </datalist>
+
+            {showSuggestions && (
+              <div className="absolute z-10 bg-white border border-gray-200 rounded-md mt-1 w-full shadow-md max-h-40 overflow-y-auto">
+                {suggestions.map((skill, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSelectSkill(skill)}
+                    className="p-2 cursor-pointer hover:bg-orange-100"
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Submit */}
           <div>
             <button
-              disabled={isLoading}
               type="submit"
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white cursor-pointer font-medium py-2 px-4 rounded-md transition disabled:opacity-50"
+              className="w-full bg-[var(--dark-amber)] text-white cursor-pointer font-medium py-2 px-4 rounded-md transition"
             >
-              {isLoading ? "Generating..." : "Generate Cover Letter"}
+              Generate Cover Letter
             </button>
           </div>
         </form>
@@ -184,6 +261,6 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
       </div>
     </div>
   );
-}
+};
 
 export default CoverLetterGenerator;
