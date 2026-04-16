@@ -5,24 +5,31 @@ import { User } from "@/types/userType";
 import { useSession } from "next-auth/react";
 import { FC, useState } from "react";
 import Loader from "@/components/common/loader"; 
-import { toast } from 'sonner'
+import { toast } from 'sonner';
 
-interface UserProps{
+interface UserProps {
   user: User
 }
+
+// 1. Define your suggestion list here
+const SKILL_SUGGESTIONS = [
+  "Next.js", "React.js", "TypeScript", "Tailwind CSS", "Node.js", 
+  "Python", "PostgreSQL", "MongoDB", "AWS", "Docker", "GraphQL", 
+  "Figma", "Redux", "Express.js", "Jest", "Cypress"
+];
 
 const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
   const { data: session, update } = useSession(); 
   const [title, setTitle] = useState('');
   const [companyName, setcompanyName] = useState('');
   const [fullName, setfullName] = useState('');
-  const [tone, setTone] = useState('');
+  const [tone, setTone] = useState('Professional');
   const [description, setdescription] = useState('');
   const [exp, setExp] = useState('');
   const [skills, setskills] = useState('');
   const [isLoading, setIsLoading] = useState(false); 
 
-  const CoverLetterGen = async(e: any) => { 
+  const CoverLetterGen = async (e: React.FormEvent) => { 
     e.preventDefault();
     setIsLoading(true);
 
@@ -36,25 +43,27 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
     formdata.append('skills', skills);
 
     try {
-      const response = await generateCoverLetter(formdata);
+      await generateCoverLetter(formdata);
       await update();
+      
+      // Reset form
       setTitle('');
-      setTone('');
+      setTone('Professional');
       setExp('');
       setcompanyName('');
       setdescription('');
       setfullName('');
       setskills('');
+      
       toast.success("Cover letter generated successfully!");
+      
+      // Refresh to show new data if necessary
+      window.location.reload();
     } catch (error) {
       console.error(error);
-
-      toast.error("Failed to generate cover letter. Please try again or upgrade plan to generate cover letters");
-      setIsLoading(false);
-      return;
+      toast.error("Failed to generate cover letter. Please try again.");
     } finally {
       setIsLoading(false); 
-      window.location.reload();
     }
   }
 
@@ -106,7 +115,7 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
               value={description}
               onChange={(e) => setdescription(e.target.value)}
               required
-              placeholder="Paste the job description here for a more tailored cover letter..."
+              placeholder="Paste the job description here..."
               className="mt-1 w-full rounded-md bg-gray-100 p-2 focus:ring-2 focus:ring-orange-500 focus:outline-none h-20"
             />
           </div>
@@ -119,9 +128,9 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
                 onChange={(e) => setTone(e.target.value)}
                 className="mt-1 w-full rounded-md bg-gray-100 p-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
               >
-                <option>Professional</option>
-                <option>Casual</option>
-                <option>Friendly</option>
+                <option value="Professional">Professional</option>
+                <option value="Casual">Casual</option>
+                <option value="Friendly">Friendly</option>
               </select>
             </div>
 
@@ -138,23 +147,31 @@ const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
             </div>
           </div>
 
+          {/* AUTOCOMPLETE SKILLS INPUT */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Key Skills *</label>
-            <textarea
+            <input
+              list="skills-options" // This ID must match the datalist ID below
               value={skills}
               onChange={(e) => setskills(e.target.value)}
               required
-              placeholder="List your key skills relevant to this position..."
-              className="mt-1 bg-gray-100 w-full rounded-md p-2 focus:ring-2 focus:ring-orange-500 focus:outline-none h-20"
+              placeholder="Start typing (e.g. Nextjs)..."
+              className="mt-1 bg-gray-100 w-full rounded-md p-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
             />
+            <datalist id="skills-options">
+              {SKILL_SUGGESTIONS.map((skill) => (
+                <option key={skill} value={skill} />
+              ))}
+            </datalist>
           </div>
 
           <div>
             <button
+              disabled={isLoading}
               type="submit"
-              className="w-full bg-[var(--dark-amber)] text-white cursor-pointer font-medium py-2 px-4 rounded-md transition"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white cursor-pointer font-medium py-2 px-4 rounded-md transition disabled:opacity-50"
             >
-              Generate Cover Letter
+              {isLoading ? "Generating..." : "Generate Cover Letter"}
             </button>
           </div>
         </form>
