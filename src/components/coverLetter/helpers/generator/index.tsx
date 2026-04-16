@@ -25,6 +25,22 @@ const SKILLS = [
   "Tailwind CSS",
   "MongoDB",
   "PostgreSQL",
+  "AWS",
+  "Azure",
+  "GCP",
+  "kubernetes",
+  "Docker",
+  "GraphQL",
+  "REST APIs",
+  "Microservices",
+  "CI/CD",
+  "Agile Methodologies",
+  "Git",
+  "Jenkins",
+  "Terraform",
+  "Ansible",
+  "Prometheus",
+  "Grafana",
 ];
 
 const CoverLetterGenerator: FC<UserProps> = ({ user }) => {
